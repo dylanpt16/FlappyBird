@@ -2,12 +2,14 @@ import {
   CANVAS_X,
   CANVAS_Y
 } from './Constants';
-import Background from './background';
+import Background from './Background';
+import Bird from './Bird';
 
 class GameManager{
   constructor(ctx){
     this.ctx = ctx;
     this.backGround = new Background(ctx);
+    this.bird = new Bird(ctx);
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
@@ -28,11 +30,13 @@ class GameManager{
 
   updateState(){
     this.backGround.updateState();
+    this.bird.updateState();
   }
 
   updateCanvas(){
     this.ctx.clearRect(0, 0, CANVAS_X, CANVAS_Y);
     this.backGround.updateCanvas();
+    this.bird.updateCanvas();
   }
 }
 
