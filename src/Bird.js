@@ -6,16 +6,25 @@ import {
 class Bird{
   constructor(ctx){
     this.ctx = ctx;
-    this._drawBird();
     this.frames = 0;
     this.state = {
       x: 150,
-      y: 200
+      y: 200,
+      gravity: 0,
+      velocity: -10,
+      rotation: 0,
+      animationSpeed: 10,
+      birdFrame: 0,
+      birdSequence: [0, 1, 2, 1],
+      birdImg: [184, 92, 0],
     }
+    this._drawBird();
   }
 
   updateState(){
     this.frames += 1;
+    const {y} = this.state;
+    this.state.y = y + Math.cos(this.frames/7);
   }
 
   updateCanvas(){
@@ -23,44 +32,27 @@ class Bird{
   }
 
   _drawBird(){
-    switch(this.frames % 20){
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-        this._bird(184);
-        break;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-        this._bird(92);
-        break;
-      case 10:
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-        this._bird(0);
-        break;
-      case 15:
-      case 16:
-      case 17:
-      case 18:
-      case 19:
-        this._bird(92);
-        break;
-    }
+    let {
+      animationSpeed,
+      birdSequence,
+      birdImg,
+      birdFrame
+    } = this.state;
+    birdFrame += this.frames % animationSpeed === 0 ? 1 : 0;
+    birdFrame %= 4;
+    this.state.birdFrame = birdFrame;
+    this._bird(birdImg[birdSequence[birdFrame]]);
   }
 
   _bird(px){
+    this.ctx.save();
     let {x, y} = this.state;
+		this.ctx.translate(x, y);
+		this.ctx.rotate(0);
     let bird = new Image();
     bird.src = 'assets/bird.png';
-    y = y + 7*Math.cos(this.frames/7);
-    this.ctx.drawImage(bird, px, 0, 92, 64, x, y, BIRD_X, BIRD_Y);
+    this.ctx.drawImage(bird, px, 0, 92, 64, 0, 0, BIRD_X, BIRD_Y);
+    this.ctx.restore();
   }
 }
 
