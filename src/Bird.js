@@ -14,15 +14,14 @@ class Bird{
       velocity: -10,
       rotation: 0,
       animationSpeed: 10,
-      birdFrame: 0,
-      birdSequence: [0, 1, 2, 1],
-      birdImg: [184, 92, 0],
+      idx: 0,
+      img: [184, 92, 0],
     }
     this._drawBird();
   }
 
-  updateState(){
-    this.frames += 1;
+  updateState(frames){
+    this.frames = frames;
     const {y} = this.state;
     this.state.y = y + Math.cos(this.frames/7);
   }
@@ -34,25 +33,24 @@ class Bird{
   _drawBird(){
     let {
       animationSpeed,
-      birdSequence,
-      birdImg,
-      birdFrame
+      img,
+      idx
     } = this.state;
-    birdFrame += this.frames % animationSpeed === 0 ? 1 : 0;
-    birdFrame %= 4;
-    this.state.birdFrame = birdFrame;
-    this._bird(birdImg[birdSequence[birdFrame]]);
+    idx = Math.floor(this.frames / 10) % 4;
+    idx = idx === 3 ? 1 : idx;
+    this._bird(img[idx]);
   }
 
   _bird(px){
-    this.ctx.save();
-    let {x, y} = this.state;
-		this.ctx.translate(x, y);
-		this.ctx.rotate(0);
+    const ctx = this.ctx;
+    ctx.save();
+    let {x, y, rotation} = this.state;
+		ctx.translate(x, y);
+		ctx.rotate(rotation);
     let bird = new Image();
     bird.src = 'assets/bird.png';
-    this.ctx.drawImage(bird, px, 0, 92, 64, 0, 0, BIRD_X, BIRD_Y);
-    this.ctx.restore();
+    ctx.drawImage(bird, px, 0, 92, 64, 0, 0, BIRD_X, BIRD_Y);
+    ctx.restore();
   }
 }
 

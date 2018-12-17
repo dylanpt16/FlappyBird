@@ -29,8 +29,9 @@ class GameManager{
   }
 
   updateState(){
+    const frames = this.requestId;
     this.backGround.updateState();
-    this.bird.updateState();
+    this.bird.updateState(frames);
   }
 
   updateCanvas(){
