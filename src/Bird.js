@@ -1,6 +1,9 @@
 import {
   BIRD_X,
-  BIRD_Y
+  BIRD_Y,
+  PREGAME,
+  PLAYING,
+  ENDGAME
 } from './Constants';
 
 class Bird{
@@ -10,8 +13,8 @@ class Bird{
     this.state = {
       x: 150,
       y: 200,
-      gravity: 0,
-      velocity: -10,
+      gravity: 0.5,
+      velocity: -2,
       rotation: 0,
       animationSpeed: 10,
       idx: 0,
@@ -20,10 +23,20 @@ class Bird{
     this._drawBird();
   }
 
-  updateState(frames){
+  updateState(currentState, frames){
     this.frames = frames;
     const {y} = this.state;
-    this.state.y = y + Math.cos(this.frames/7);
+    switch(currentState){
+      case PREGAME:
+        this.state.y = y + Math.cos(this.frames/7);
+        break;
+      case PLAYING:
+        this.state.velocity += this.state.gravity;
+        this.state.y += this.state.velocity;
+        break;
+      case ENDGAME:
+        break;
+    }
   }
 
   updateCanvas(){
@@ -45,12 +58,16 @@ class Bird{
     const ctx = this.ctx;
     ctx.save();
     let {x, y, rotation} = this.state;
-		ctx.translate(x, y);
-		ctx.rotate(rotation);
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
     let bird = new Image();
     bird.src = 'assets/bird.png';
     ctx.drawImage(bird, px, 0, 92, 64, 0, 0, BIRD_X, BIRD_Y);
     ctx.restore();
+  }
+
+  jump(){
+    this.state.velocity = -10;
   }
 }
 

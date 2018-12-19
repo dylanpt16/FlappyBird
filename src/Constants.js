@@ -5,3 +5,9 @@ export const CANVAS_Y = 800;
 export const BIRD_X = 62;
 
 export const BIRD_Y = 44;
+
+export const PREGAME = 'PREGAME';
+
+export const PLAYING = 'PLAYING';
+
+export const ENDGAME = 'ENDGAME';

@@ -1,6 +1,9 @@
 import {
   CANVAS_X,
-  CANVAS_Y
+  CANVAS_Y,
+  PREGAME,
+  PLAYING,
+  ENDGAME
 } from './Constants';
 
 class Background{
@@ -11,10 +14,15 @@ class Background{
     }
   }
 
-  updateState(){
-    this.state.x -= 5;
-    if(this.state.x < 570){
-      this.state.x = 600;
+  updateState(currentState){
+    switch(currentState){
+      case ENDGAME:
+        break;
+      default:
+        this.state.x -= 5;
+        if(this.state.x < 570){
+          this.state.x = 600;
+        }
     }
   }
 
