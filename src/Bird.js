@@ -31,11 +31,20 @@ class Bird{
         this.state.y = y + Math.cos(this.frames/7);
         break;
       case PLAYING:
-        this.state.velocity += this.state.gravity;
-        this.state.y += this.state.velocity;
+        this._playingState();
         break;
       case ENDGAME:
         break;
+    }
+  }
+
+  _playingState(){
+    this.state.velocity += this.state.gravity;
+    this.state.y += this.state.velocity;
+    if(this.state.velocity >= -2){
+      this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
+    }else{
+      this.state.rotation = -0.3
     }
   }
 
@@ -56,13 +65,13 @@ class Bird{
 
   _bird(px){
     const ctx = this.ctx;
-    ctx.save();
     let {x, y, rotation} = this.state;
-    ctx.translate(x, y);
-    ctx.rotate(rotation);
     let bird = new Image();
     bird.src = 'assets/bird.png';
-    ctx.drawImage(bird, px, 0, 92, 64, 0, 0, BIRD_X, BIRD_Y);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.drawImage(bird, px, 0, 92, 64, -BIRD_X/2, -BIRD_Y/2, BIRD_X, BIRD_Y);
     ctx.restore();
   }
 
