@@ -7,12 +7,14 @@ import {
 } from './Constants';
 import Background from './Background';
 import Bird from './Bird';
+import Pipes from './Pipes';
 
 class GameManager{
   constructor(ctx){
     this.ctx = ctx;
     this.backGround = new Background(ctx);
     this.bird = new Bird(ctx);
+    this.pipes = new Pipes(ctx);
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
@@ -36,6 +38,9 @@ class GameManager{
     const frames = this.requestId;
     this.backGround.updateState(this.currentState);
     this.bird.updateState(this.currentState, frames);
+    if(this.bird.hasBirdTouchedGround() || this.pipes.hasBirdCrashed()){
+      this.currentState = ENDGAME;
+    }
   }
 
   updateCanvas(){
@@ -45,10 +50,15 @@ class GameManager{
   }
 
   onPressed(){
-    if(this.currentState === PREGAME){
-      this.currentState = PLAYING;
+    switch(this.currentState){
+      case PREGAME:
+        this.currentState = PLAYING;
+        this.bird.jump();
+        break;
+      case PLAYING:
+        this.bird.jump();
+        break;
     }
-    this.bird.jump();
   }
 }
 

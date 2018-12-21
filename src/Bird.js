@@ -1,6 +1,7 @@
 import {
   BIRD_X,
   BIRD_Y,
+  CANVAS_Y,
   PREGAME,
   PLAYING,
   ENDGAME
@@ -21,6 +22,7 @@ class Bird{
       img: [184, 92, 0],
     }
     this._drawBird();
+    this.hasBirdTouchedGround = this.hasBirdTouchedGround.bind(this);
   }
 
   updateState(currentState, frames){
@@ -34,6 +36,7 @@ class Bird{
         this._playingState();
         break;
       case ENDGAME:
+        this._endGameState();
         break;
     }
   }
@@ -41,11 +44,23 @@ class Bird{
   _playingState(){
     this.state.velocity += this.state.gravity;
     this.state.y += this.state.velocity;
-    if(this.state.velocity >= -2){
+    if(this.state.velocity >= 10){
       this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
     }else{
       this.state.rotation = -0.3
     }
+  }
+
+  _endGameState(){
+    this.state.img = [92, 92, 92];
+    if( this.state.y <= (5*CANVAS_Y/6 - 30) ){
+      this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
+      this.state.y += 10;
+    }
+  }
+
+  hasBirdTouchedGround(){
+    return this.state.y >= (5*CANVAS_Y/6 - 30);
   }
 
   updateCanvas(){
@@ -54,12 +69,12 @@ class Bird{
 
   _drawBird(){
     let {
-      animationSpeed,
       img,
       idx
     } = this.state;
     idx = Math.floor(this.frames / 10) % 4;
     idx = idx === 3 ? 1 : idx;
+    this.state.idx = idx;
     this._bird(img[idx]);
   }
 
