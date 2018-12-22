@@ -1,7 +1,8 @@
 import {
-  BIRD_X,
-  BIRD_Y,
+  BIRD_WIDTH,
+  BIRD_HEIGHT,
   CANVAS_Y,
+  BACKGROUND_HEIGHT,
   PREGAME,
   PLAYING,
   ENDGAME
@@ -53,14 +54,14 @@ class Bird{
 
   _endGameState(){
     this.state.img = [92, 92, 92];
-    if( this.state.y <= (5*CANVAS_Y/6 - 30) ){
+    if(this.state.y <= BACKGROUND_HEIGHT - BIRD_WIDTH/2){
       this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
       this.state.y += 10;
     }
   }
 
   hasBirdTouchedGround(){
-    return this.state.y >= (5*CANVAS_Y/6 - 30);
+    return this.state.y >= BACKGROUND_HEIGHT - BIRD_WIDTH/2;
   }
 
   updateCanvas(){
@@ -86,7 +87,7 @@ class Bird{
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(rotation);
-    ctx.drawImage(bird, px, 0, 92, 64, -BIRD_X/2, -BIRD_Y/2, BIRD_X, BIRD_Y);
+    ctx.drawImage(bird, px, 0, 92, 64, -BIRD_WIDTH/2, -BIRD_HEIGHT/2, BIRD_WIDTH, BIRD_HEIGHT);
     ctx.restore();
   }
 

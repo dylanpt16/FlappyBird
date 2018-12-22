@@ -38,6 +38,7 @@ class GameManager{
     const frames = this.requestId;
     this.backGround.updateState(this.currentState);
     this.bird.updateState(this.currentState, frames);
+    this.pipes.updateState();
     if(this.bird.hasBirdTouchedGround() || this.pipes.hasBirdCrashed()){
       this.currentState = ENDGAME;
     }
@@ -45,8 +46,10 @@ class GameManager{
 
   updateCanvas(){
     this.ctx.clearRect(0, 0, CANVAS_X, CANVAS_Y);
-    this.backGround.updateCanvas();
+    this.backGround.upperBg();
     this.bird.updateCanvas();
+    this.pipes.updateCanvas();
+    this.backGround.ground();
   }
 
   onPressed(){
