@@ -94,6 +94,14 @@ class Bird{
   jump(){
     this.state.velocity = -10;
   }
+
+  getX(){
+    return this.state.x;
+  }
+
+  getY(){
+    return this.state.y;
+  }
 }
 
 export default Bird;

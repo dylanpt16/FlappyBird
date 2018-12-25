@@ -1,6 +1,7 @@
 import {
   PIPE_WIDTH,
   PIPE_SPEED,
+  BIRD_HEIGHT,
   CANVAS_X,
   CANVAS_Y,
   GROUND_HEIGHT,
@@ -19,11 +20,22 @@ class Pipes{
     this._move = this._move.bind(this);
   }
 
-  updateState(){
-    this._pipes.forEach(p => this._move(p));
-    this._frames += 1;
-    if(!(this._frames%60)){
-      this._addNewPipes();
+  updateState(currentState){
+    switch(currentState){
+      case PREGAME:
+        break;
+      case PLAYING:
+        this._pipes.forEach(p => this._move(p));
+        this._frames += 1;
+        if(!(this._frames%60)){
+          this._addNewPipes();
+        }
+        if( this._pipes[0] && this._pipes[0].x === -PIPE_WIDTH){
+          this._removeOldPipes();
+        }
+        break;
+      case ENDGAME:
+        break;
     }
   }
 
@@ -31,19 +43,35 @@ class Pipes{
     this._pipes.forEach(p => this._draw(p));
   }
 
-  _drawPipes(){
-    //    const ctx = this.ctx;
-    //    let pipe = new Image();
-    //    pipe.src = 'assets/pipe.png';
-    //    ctx.drawImage(pipe, x, 600 - 200, PIPE_WIDTH, 300);
-    //    ctx.save();
-    //    ctx.translate(x, 0);
-    //    ctx.rotate(Math.PI);
-    //    ctx.drawImage(pipe, -PIPE_WIDTH, -200, PIPE_WIDTH, 200);
-    //    ctx.restore();
-  }
+  hasBirdCrashed(bird){
+    let hasCrashed = false;
+    let birdX = bird.getX();
+    let birdY = bird.getY();
+    this._pipes.forEach(p => {
+      let {
+        x,
+        y,
+        width,
+        top,
+        space
+      } = p;
+      let closestX  = Math.min(Math.max(birdX, x), x + width);
+      let closestTop = Math.min(birdY, y + top);
+      let closestBtm  = Math.max(birdY, y + top + space);
 
-  hasBirdCrashed(){
+      let dX  = birdX - closestX;
+      let dTop = birdY - closestTop;
+      let dBtm = birdY - closestBtm;
+      // vector length
+      let d1 = dX*dX + dTop*dTop;
+      let d2 = dX*dX + dBtm*dBtm;
+      let birdRadius = (BIRD_HEIGHT/2)*(BIRD_HEIGHT/2);
+      // determine intersection
+      if (birdRadius > d1 || birdRadius > d2) {
+        hasCrashed = true;
+      }
+    })
+    return hasCrashed;
   }
 
   _move(p){
@@ -64,10 +92,10 @@ class Pipes{
   }
 
   _addNewPipes(){
-    var space = 170;
-    var btm = this._getRandomInt(GROUND_HEIGHT + 50, 400);
-    var top = CANVAS_Y - btm - space;
-    var pipe = {
+    let space = 170;
+    let btm = this._getRandomInt(GROUND_HEIGHT + 50, 400);
+    let top = CANVAS_Y - btm - space;
+    let pipe = {
       top: top,
       x: 600,
       y: 0,
@@ -76,6 +104,10 @@ class Pipes{
       width: PIPE_WIDTH
     };
     this._pipes.push(pipe);
+  }
+
+  _removeOldPipes(){
+    this._pipes.splice(0, 1);
   }
 
   _getRandomInt(min, max){
