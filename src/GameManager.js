@@ -12,9 +12,11 @@ import Pipes from './Pipes';
 class GameManager{
   constructor(ctx){
     this.ctx = ctx;
-    this.backGround = new Background(ctx);
-    this.bird = new Bird(ctx);
-    this.pipes = new Pipes(ctx);
+    this.state = {
+      backGround: new Background(ctx),
+      bird: new Bird(ctx),
+      pipes: new Pipes(ctx)
+    }
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
@@ -36,30 +38,45 @@ class GameManager{
 
   updateState(){
     const frames = this.requestId;
-    this.backGround.updateState(this.currentState);
-    this.pipes.updateState(this.currentState);
-    this.bird.updateState(this.currentState, frames);
-    if(this.bird.hasBirdTouchedGround() || this.pipes.hasBirdCrashed(this.bird)){
+    const {
+      backGround,
+      bird,
+      pipes
+    } = this.state;
+    backGround.updateState(this.currentState);
+    pipes.updateState(this.currentState);
+    bird.updateState(this.currentState, frames);
+    if(bird.hasBirdTouchedGround() || pipes.hasBirdCrashed(bird)){
       this.currentState = ENDGAME;
     }
   }
 
   updateCanvas(){
+    const {
+      backGround,
+      bird,
+      pipes
+    } = this.state;
     this.ctx.clearRect(0, 0, CANVAS_X, CANVAS_Y);
-    this.backGround.upperBg();
-    this.pipes.updateCanvas();
-    this.bird.updateCanvas();
-    this.backGround.ground();
+    backGround.upperBg();
+    pipes.updateCanvas();
+    bird.updateCanvas();
+    backGround.ground();
   }
 
   onPressed(){
+    const {
+      backGround,
+      bird,
+      pipes
+    } = this.state;
     switch(this.currentState){
       case PREGAME:
         this.currentState = PLAYING;
-        this.bird.jump();
+        bird.jump();
         break;
       case PLAYING:
-        this.bird.jump();
+        bird.jump();
         break;
     }
   }
