@@ -44,6 +44,9 @@ class Bird{
 
   _playingState(){
     this.state.velocity += this.state.gravity;
+    if(this.state.y <= BIRD_HEIGHT/2){
+      this.state.velocity = 1;
+    }
     this.state.y += this.state.velocity;
     if(this.state.velocity >= 10){
       this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
