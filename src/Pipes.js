@@ -16,6 +16,7 @@ class Pipes{
     this._pipes = [];
     this._frames = 0;
     this.hasBirdCrashed = this.hasBirdCrashed.bind(this);
+    this.hasBirdPassed = this.hasBirdPassed.bind(this);
     this._draw = this._draw.bind(this);
     this._move = this._move.bind(this);
   }
@@ -114,6 +115,11 @@ class Pipes{
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  hasBirdPassed(){
+    const pipe = this._pipes[0];
+    return (pipe && pipe.x + pipe.width === 130);
   }
 }
 

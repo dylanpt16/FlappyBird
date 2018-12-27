@@ -15,7 +15,8 @@ class GameManager{
     this.state = {
       backGround: new Background(ctx),
       bird: new Bird(ctx),
-      pipes: new Pipes(ctx)
+      pipes: new Pipes(ctx),
+      score: 0
     }
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
@@ -49,6 +50,7 @@ class GameManager{
     if(bird.hasBirdTouchedGround() || pipes.hasBirdCrashed(bird)){
       this.currentState = ENDGAME;
     }
+    this.state.score += pipes.hasBirdPassed() ? 1 : 0;
   }
 
   updateCanvas(){
@@ -62,6 +64,7 @@ class GameManager{
     pipes.updateCanvas();
     bird.updateCanvas();
     backGround.ground();
+    this.drawScore();
   }
 
   onPressed(){
@@ -79,6 +82,13 @@ class GameManager{
         bird.jump();
         break;
     }
+  }
+
+  drawScore(){
+    const ctx = this.ctx;
+    ctx.font = '46px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText(this.state.score, CANVAS_X/2, CANVAS_Y - 10);
   }
 }
 
