@@ -14,9 +14,11 @@ class Background{
     this.state = {
       x: 600,
     }
+    this.currentState = PREGAME;
   }
 
   updateState(currentState){
+    this.currentState = currentState;
     switch(currentState){
       case ENDGAME:
         break;
@@ -28,22 +30,24 @@ class Background{
     }
   }
 
-  updateCanvas(){
-    this._upperBg();
-    this._ground();
-  }
-
-  upperBg(){
+  drawUpperBg(){
+    const ctx = this.ctx;
     let bg = new Image();
     bg.src = 'assets/background.png';
-    this.ctx.drawImage(bg, 0, 0, CANVAS_X, BACKGROUND_HEIGHT);
+    ctx.drawImage(bg, 0, 0, CANVAS_X, BACKGROUND_HEIGHT);
+    if(this.currentState === PREGAME){
+      let logo = new Image();
+      logo.src = 'assets/logo.png';
+      ctx.drawImage(logo, CANVAS_X/2 - 131, CANVAS_Y/6, 262, 70);
+    }
   }
 
-  ground(){
+  drawGround(){
+    const ctx = this.ctx;
     let bg = new Image();
     bg.src = 'assets/ground.png';
     for(let i = 0; i < 18 ; i++){
-      this.ctx.drawImage(bg, this.state.x-37*i, BACKGROUND_HEIGHT);
+      ctx.drawImage(bg, this.state.x-37*i, BACKGROUND_HEIGHT);
     }
   }
 }

@@ -60,10 +60,10 @@ class GameManager{
       pipes
     } = this.state;
     this.ctx.clearRect(0, 0, CANVAS_X, CANVAS_Y);
-    backGround.upperBg();
+    backGround.drawUpperBg();
     pipes.updateCanvas();
     bird.updateCanvas();
-    backGround.ground();
+    backGround.drawGround();
     this.drawScore();
   }
 
