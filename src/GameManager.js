@@ -47,7 +47,9 @@ class GameManager{
     backGround.updateState(this.currentState);
     pipes.updateState(this.currentState);
     bird.updateState(this.currentState, frames);
-    if(this.currentState != ENDGAME && (bird.hasBirdTouchedGround() || pipes.hasBirdCrashed(bird))){
+    if(this.currentState != ENDGAME
+      && (bird.hasBirdTouchedGround()
+      || pipes.hasBirdCrashed(bird))){
       this.currentState = ENDGAME;
     }
     this.state.score += pipes.hasBirdPassed() ? 1 : 0;

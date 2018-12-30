@@ -23,6 +23,10 @@ class Bird{
       idx: 0,
       img: [184, 92, 0],
     }
+    this.sounds = {
+      'crashedGround': new Audio('assets/sound/crashedGround.wav'),
+      'keyPressed': new Audio('assets/sound/keyPressed.wav')
+    }
     this._drawBird();
     this.hasBirdTouchedGround = this.hasBirdTouchedGround.bind(this);
   }
@@ -87,7 +91,7 @@ class Bird{
     const ctx = this.ctx;
     let {x, y, rotation} = this.state;
     let bird = new Image();
-    bird.src = 'assets/bird.png';
+    bird.src = 'assets/img/bird.png';
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(rotation);
@@ -97,6 +101,7 @@ class Bird{
 
   jump(){
     this.state.velocity = -10;
+    this.sounds['keyPressed'].play();
   }
 
   getX(){

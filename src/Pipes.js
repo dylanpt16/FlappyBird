@@ -18,6 +18,9 @@ class Pipes{
     this._frames = 0;
     this.hasBirdCrashed = this.hasBirdCrashed.bind(this);
     this.hasBirdPassed = this.hasBirdPassed.bind(this);
+    this.sounds = {
+      'crashedPipe': new Audio('assets/sound/crashedPipe.wav')
+    }
     this._draw = this._draw.bind(this);
     this._move = this._move.bind(this);
   }
@@ -71,6 +74,7 @@ class Pipes{
       // determine intersection
       if (birdRadius > d1 || birdRadius > d2) {
         hasCrashed = true;
+        this.sounds['crashedPipe'].play();
       }
     })
     return hasCrashed;
@@ -84,7 +88,7 @@ class Pipes{
     const ctx = this.ctx;
     const {x, y, top, btm, space, width} = p;
     let pipe = new Image();
-    pipe.src = 'assets/pipe.png';
+    pipe.src = 'assets/img/pipe.png';
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(Math.PI);
