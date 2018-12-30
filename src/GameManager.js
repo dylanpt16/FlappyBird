@@ -47,7 +47,7 @@ class GameManager{
     backGround.updateState(this.currentState);
     pipes.updateState(this.currentState);
     bird.updateState(this.currentState, frames);
-    if(bird.hasBirdTouchedGround() || pipes.hasBirdCrashed(bird)){
+    if(this.currentState != ENDGAME && (bird.hasBirdTouchedGround() || pipes.hasBirdCrashed(bird))){
       this.currentState = ENDGAME;
     }
     this.state.score += pipes.hasBirdPassed() ? 1 : 0;
@@ -88,7 +88,7 @@ class GameManager{
     const ctx = this.ctx;
     ctx.font = '46px Arial';
     ctx.fillStyle = 'white';
-    ctx.fillText(this.state.score, CANVAS_X/2, CANVAS_Y - 10);
+    ctx.fillText(this.state.score, CANVAS_X/2 - 23, 50);
   }
 }
 

@@ -1,4 +1,5 @@
 import {
+  BIRD_X,
   PIPE_WIDTH,
   PIPE_SPEED,
   BIRD_HEIGHT,
@@ -119,7 +120,7 @@ class Pipes{
 
   hasBirdPassed(){
     const pipe = this._pipes[0];
-    return (pipe && pipe.x + pipe.width === 130);
+    return (pipe && pipe.x + pipe.width === BIRD_X);
   }
 }
 

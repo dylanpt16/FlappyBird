@@ -6,6 +6,8 @@ export const BIRD_WIDTH = 62;
 
 export const BIRD_HEIGHT = 44;
 
+export const BIRD_X = 100;
+
 export const PREGAME = 'PREGAME';
 
 export const PLAYING = 'PLAYING';

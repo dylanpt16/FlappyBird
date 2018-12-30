@@ -1,4 +1,5 @@
 import {
+  BIRD_X,
   BIRD_WIDTH,
   BIRD_HEIGHT,
   CANVAS_Y,
@@ -13,8 +14,8 @@ class Bird{
     this.ctx = ctx;
     this.frames = 0;
     this.state = {
-      x: 150,
-      y: 200,
+      x: BIRD_X,
+      y: 250,
       gravity: 0.5,
       velocity: -2,
       rotation: 0,

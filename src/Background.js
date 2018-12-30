@@ -36,10 +36,21 @@ class Background{
     bg.src = 'assets/background.png';
     ctx.drawImage(bg, 0, 0, CANVAS_X, BACKGROUND_HEIGHT);
     if(this.currentState === PREGAME){
-      let logo = new Image();
-      logo.src = 'assets/logo.png';
-      ctx.drawImage(logo, CANVAS_X/2 - 131, CANVAS_Y/6, 262, 70);
+      this._drawInstructions();
     }
+  }
+
+  _drawInstructions(){
+    const ctx = this.ctx;
+    let logo = new Image();
+    logo.src = 'assets/logo.png';
+    ctx.drawImage(logo, CANVAS_X/2 - 131, CANVAS_Y/6, 262, 70);
+    let spaceBar = new Image();
+    spaceBar.src = 'assets/spacebar.png';
+    ctx.drawImage(spaceBar, CANVAS_X/2 - 60, CANVAS_Y/2.8, 120, 100)
+    let finger = new Image();
+    finger.src = 'assets/finger.jpg';
+    ctx.drawImage(finger, CANVAS_X/2 - 50, CANVAS_Y/2, 100, 80)
   }
 
   drawGround(){
