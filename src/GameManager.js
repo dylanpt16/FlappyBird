@@ -17,7 +17,7 @@ class GameManager{
       bird: new Bird(ctx),
       pipes: new Pipes(ctx),
       score: 0
-    }
+    };
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
@@ -31,7 +31,7 @@ class GameManager{
   }
 
   newGame(){
-    if(this.requestId) {
+    if(this.requestId){
       cancelAnimationFrame(this.requestId);
     }
     this.requestId = requestAnimationFrame(this._run);
@@ -48,8 +48,9 @@ class GameManager{
     pipes.updateState(this.currentState);
     bird.updateState(this.currentState, frames);
     if(this.currentState != ENDGAME
-      && (bird.hasBirdTouchedGround()
-      || pipes.hasBirdCrashed(bird))){
+      && bird.hasBirdTouchedGround()
+      || pipes.hasBirdCrashed(bird)
+    ){
       this.currentState = ENDGAME;
     }
     this.state.score += pipes.hasBirdPassed() ? 1 : 0;
