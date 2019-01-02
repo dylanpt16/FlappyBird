@@ -22,6 +22,6 @@ export const GROUND_HEIGHT = CANVAS_Y/7
 
 export const BACKGROUND_HEIGHT = CANVAS_Y - GROUND_HEIGHT;
 
-export const GROUND_SPEED = 5;
+export const GROUND_SPEED = 3;
 
-export const PIPE_SPEED = 5;
+export const PIPE_SPEED = 3;

@@ -3,6 +3,7 @@ import {
   CANVAS_Y,
   BACKGROUND_HEIGHT,
   GROUND_HEIGHT,
+  GROUND_SPEED,
   PREGAME,
   PLAYING,
   ENDGAME
@@ -27,13 +28,13 @@ class Background{
   updateState(currentState){
     this.currentState = currentState;
     switch(currentState){
-      case ENDGAME:
-        break;
-      default:
-        this.state.x -= 5;
-        if(this.state.x < 570){
+      case PLAYING:
+        this.state.x -= GROUND_SPEED;
+        if(this.state.x < 563){
           this.state.x = 600;
         }
+      default:
+        break;
     }
   }
 

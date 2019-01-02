@@ -62,14 +62,16 @@ class Bird{
 
   _endGameState(){
     this.state.img = [92, 92, 92];
-    if(this.state.y <= BACKGROUND_HEIGHT - BIRD_WIDTH/2){
+    const lowestBirdPosition = this.state.y + BIRD_WIDTH/2;
+    if(lowestBirdPosition < BACKGROUND_HEIGHT){
       this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
       this.state.y += 10;
     }
   }
 
   hasBirdTouchedGround(){
-    return this.state.y >= BACKGROUND_HEIGHT - BIRD_WIDTH/2;
+    const lowestBirdPosition = this.state.y + BIRD_WIDTH/2;
+    return lowestBirdPosition >= BACKGROUND_HEIGHT;
   }
 
   updateCanvas(){

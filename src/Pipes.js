@@ -27,19 +27,21 @@ class Pipes{
 
   updateState(currentState){
     switch(currentState){
-      case PREGAME:
-        break;
       case PLAYING:
         this._pipes.forEach(p => this._move(p));
         this._frames += 1;
-        if(!(this._frames%60)){
+        const isEmpty = this._pipes.length === 0;
+        const rightMostPipe = this._pipes[this._pipes.length - 1];
+        const shouldAddNewPipe = isEmpty || rightMostPipe.x <= 330;
+        const leftMostPipe = this._pipes[0];
+        if(shouldAddNewPipe){
           this._addNewPipes();
         }
-        if( this._pipes[0] && this._pipes[0].x === -PIPE_WIDTH){
+        if(leftMostPipe && leftMostPipe.x === -PIPE_WIDTH){
           this._removeOldPipes();
         }
         break;
-      case ENDGAME:
+      default:
         break;
     }
   }
@@ -123,8 +125,8 @@ class Pipes{
   }
 
   hasBirdPassed(){
-    const pipe = this._pipes[0];
-    return (pipe && pipe.x + pipe.width === BIRD_X);
+    const leftMostPipe = this._pipes[0];
+    return (leftMostPipe  && leftMostPipe.x + leftMostPipe.width === BIRD_X);
   }
 }
 
