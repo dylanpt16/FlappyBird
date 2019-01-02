@@ -8,7 +8,8 @@ import {
 
 import {PIPE_SRC} from './Images';
 
-const pipeCrashSound = new Audio('assets/sound/crashedPipe.wav');
+import {pipeCrashSound} from './Sounds';
+
 const pipeImg = new Image();
 pipeImg.src = PIPE_SRC;
 
@@ -16,7 +17,6 @@ class Pipes{
   constructor(ctx){
     this.ctx = ctx;
     this._pipeCollection = [];
-    this.hasBirdCrashedPipe = this.hasBirdCrashedPipe.bind(this);
     this.hasBirdPassedFirstPipe = this.hasBirdPassedFirstPipe.bind(this);
   }
 
@@ -87,30 +87,8 @@ class Pipes{
     return birdPassedFirstPipes;
   }
 
-  hasBirdCrashedPipe(bird){
-    return this._pipeCollection.some(this._hasPipeColideWithBird.bind(this, bird));
-  }
-
-  _hasPipeColideWithBird(bird, pipe){
-    const [birdX, birdY] = bird.getPositions();
-    const {x, y, width, upperPipeHeight, space} = pipe;
-    const closestX  = Math.min(Math.max(birdX, x), x + width);
-    const closestupperPipeHeight = Math.min(birdY, y + upperPipeHeight);
-    const closestlowerPipeHeight  = Math.max(birdY, y + upperPipeHeight + space);
-
-    const dX  = birdX - closestX;
-    const dupperPipeHeight = birdY - closestupperPipeHeight;
-    const dlowerPipeHeight = birdY - closestlowerPipeHeight;
-    // vector length
-    const d1 = dX*dX + dupperPipeHeight*dupperPipeHeight;
-    const d2 = dX*dX + dlowerPipeHeight*dlowerPipeHeight;
-    const birdRadius = (BIRD.HEIGHT/2)*(BIRD.HEIGHT/2);
-    // determine intersection
-    if (birdRadius > d1 || birdRadius > d2) {
-      pipeCrashSound.play();
-      return true;
-    }
-    return false;
+  leftMostPipe(){
+    return this._pipeCollection[0] || {};
   }
 }
 

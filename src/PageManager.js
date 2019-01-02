@@ -14,6 +14,9 @@ class PageManager{
     key( 'space', () => {
       this._game.onPressed();
     });
+    this.$el.find('#canvas').on('click', ()=>{
+      this._game.onPressed();
+    });
   }
 }
 

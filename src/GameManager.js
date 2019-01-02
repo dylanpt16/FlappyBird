@@ -1,10 +1,12 @@
 import {
+  BIRD,
   CANVAS,
   STATE,
 } from './Constants';
 import Background from './Background';
 import Bird from './Bird';
 import Pipes from './Pipes';
+import {birdJumpSound, pipeCrashSound, earnPointSound} from './Sounds';
 
 class GameManager{
   constructor(ctx){
@@ -41,16 +43,19 @@ class GameManager{
       bird,
       pipes
     } = this.state;
+
     backGround.updateState(this.currentState);
     pipes.updateState(this.currentState);
     bird.updateState(this.currentState, frames);
-    if(this.currentState != STATE.ENDGAME
-      && (bird.hasBirdTouchedGround()
-      || pipes.hasBirdCrashedPipe(bird))
-    ){
+
+    if(this.currentState != STATE.ENDGAME && this.hasBirdCrashedPipe(bird, pipes.leftMostPipe())){
       this.currentState = STATE.ENDGAME;
     }
-    this.state.score += pipes.hasBirdPassedFirstPipe() ? 1 : 0;
+
+    if(pipes.hasBirdPassedFirstPipe()){
+      this.state.score += 1;
+      earnPointSound.play();
+    }
   }
 
   updateCanvas(){
@@ -75,11 +80,35 @@ class GameManager{
       case STATE.PREGAME:
         this.currentState = STATE.PLAYING;
         bird.jump();
+        birdJumpSound.play();
         break;
       case STATE.PLAYING:
         bird.jump();
+        birdJumpSound.play();
         break;
     }
+  }
+
+  hasBirdCrashedPipe(bird, leftMostPipe){
+    const [birdX, birdY] = bird.getPositions();
+    const {x, y, width, upperPipeHeight, space} = leftMostPipe;
+    const closestX  = Math.min(Math.max(birdX, x), x + width);
+    const closestUpperPipeHeight = Math.min(birdY, y + upperPipeHeight);
+    const closestLowerPipeHeight  = Math.max(birdY, y + upperPipeHeight + space);
+
+    const dX  = birdX - closestX;
+    const dUpperPipeHeight = birdY - closestUpperPipeHeight;
+    const dLowerPipeHeight = birdY - closestLowerPipeHeight;
+    // vector length
+    const d1 = dX*dX + dUpperPipeHeight*dUpperPipeHeight;
+    const d2 = dX*dX + dLowerPipeHeight*dLowerPipeHeight;
+    const birdRadius = (BIRD.HEIGHT/2)*(BIRD.HEIGHT/2);
+    // determine intersection
+    if (birdRadius > d1 || birdRadius > d2) {
+      pipeCrashSound.play();
+      return true;
+    }
+    return false;
   }
 
   drawScore(){

@@ -11,8 +11,6 @@ const birdImg = new Image();
 birdImg.src = BIRD_SRC;
 const FLAPPING_BIRD_IMG_INDEXES = [184, 92, 0];
 const birdGravity = BIRD.GRAVITY;
-const birdCrashedGroundSound = new Audio('assets/sound/crashedGround.wav');
-const birdJumpSound = new Audio('assets/sound/keyPressed.wav');
 
 class Bird{
   constructor(ctx){
@@ -124,7 +122,6 @@ class Bird{
 
   jump(){
     this.state.velocity = -BIRD.JUMP_INITIAL_SPEED;
-    birdJumpSound.play();
   }
 
   getPositions() {
