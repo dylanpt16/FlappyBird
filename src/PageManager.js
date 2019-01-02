@@ -10,12 +10,15 @@ class PageManager{
     this._initListeners();
   }
 
-  _initListeners() {
+  _initListeners(){
     key( 'space', () => {
       this._game.onPressed();
     });
     this.$el.find('#canvas').on('click', ()=>{
       this._game.onPressed();
+    });
+    this.$el.find('button').on('click', ()=>{
+      this._game.toggleSound();
     });
   }
 }

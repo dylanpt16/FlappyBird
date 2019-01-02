@@ -17,6 +17,7 @@ class GameManager{
       pipes: new Pipes(ctx),
       score: 0
     };
+    this.isSoundMuted = true;
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
@@ -116,6 +117,13 @@ class GameManager{
     ctx.font = '46px Arial';
     ctx.fillStyle = 'white';
     ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 23, 50);
+  }
+
+  toggleSound(){
+    birdJumpSound.muted = this.isSoundMuted;
+    pipeCrashSound.muted = this.isSoundMuted;
+    earnPointSound.muted = this.isSoundMuted;
+    this.isSoundMuted = !this.isSoundMuted;
   }
 }
 
