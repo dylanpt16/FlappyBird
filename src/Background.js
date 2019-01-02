@@ -1,13 +1,22 @@
 import {
-  CANVAS_X,
-  CANVAS_Y,
-  BACKGROUND_HEIGHT,
-  GROUND_HEIGHT,
-  GROUND_SPEED,
-  PREGAME,
-  PLAYING,
-  ENDGAME
+  BACKGROUND,
+  BIRD,
+  CANVAS,
+  PIPE,
+  STATE,
 } from './Constants';
+import {BACKGROUND_SRC} from './Images';
+
+const upperBackgroundImg = new Image();
+upperBackgroundImg.src = BACKGROUND_SRC.UPPER;
+const lowerBackgroundImg = new Image();
+lowerBackgroundImg.src = BACKGROUND_SRC.LOWER;
+const fingerImg = new Image();
+fingerImg.src = BACKGROUND_SRC.FINGER;
+const logoImg = new Image();
+logoImg.src = BACKGROUND_SRC.LOGO;
+const spacebarImg = new Image();
+spacebarImg.src = BACKGROUND_SRC.SPACEBAR;
 
 class Background{
   constructor(ctx){
@@ -15,58 +24,37 @@ class Background{
     this.state = {
       x: 600,
     }
-    this.currentState = PREGAME;
-    this.img = {
-      'bg': 'assets/img/background.png',
-      'ground': 'assets/img/ground.png',
-      'logo': 'assets/img/logo.png',
-      'spaceBar': 'assets/img/spacebar.png',
-      'finger': 'assets/img/finger.jpg'
-    }
   }
 
   updateState(currentState){
-    this.currentState = currentState;
-    switch(currentState){
-      case PLAYING:
-        this.state.x -= GROUND_SPEED;
-        if(this.state.x < 563){
-          this.state.x = 600;
-        }
-      default:
-        break;
+    if(currentState === STATE.PLAYING || currentState === STATE.PREGAME){
+      this.currentState = currentState;
+      this.state.x -= BACKGROUND.SPEED;
+      if(this.state.x <= 564){
+        this.state.x = 600;
+      }
     }
   }
 
-  drawUpperBg(){
+  drawUpperBackground(){
     const ctx = this.ctx;
-    let bg = new Image();
-    bg.src = this.img['bg'];
-    ctx.drawImage(bg, 0, 0, CANVAS_X, BACKGROUND_HEIGHT);
-    if(this.currentState === PREGAME){
+    ctx.drawImage(upperBackgroundImg, 0, 0, CANVAS.WIDTH, BACKGROUND.UPPER_HEIGHT);
+    if(this.currentState === STATE.PREGAME){
       this._drawInstructions();
     }
   }
 
   _drawInstructions(){
     const ctx = this.ctx;
-    let logo = new Image();
-    logo.src = this.img['logo'];
-    ctx.drawImage(logo, CANVAS_X/2 - 131, CANVAS_Y/6, 262, 70);
-    let spaceBar = new Image();
-    spaceBar.src = this.img['spaceBar'];
-    ctx.drawImage(spaceBar, CANVAS_X/2 - 60, CANVAS_Y/2.8, 120, 100)
-    let finger = new Image();
-    finger.src = this.img['finger'];
-    ctx.drawImage(finger, CANVAS_X/2 - 50, CANVAS_Y/2, 100, 80)
+    ctx.drawImage(logoImg, CANVAS.WIDTH/2 - 131, CANVAS.HEIGHT/6, 262, 70);
+    ctx.drawImage(spacebarImg, CANVAS.WIDTH/2 - 60, CANVAS.HEIGHT/2.8, 120, 100)
+    ctx.drawImage(fingerImg, CANVAS.WIDTH/2 - 50, CANVAS.HEIGHT/2, 100, 80)
   }
 
-  drawGround(){
+  drawLowerBackground(){
     const ctx = this.ctx;
-    let ground = new Image();
-    ground.src = this.img['ground'];
-    for(let i = 0; i < 18 ; i++){
-      ctx.drawImage(ground, this.state.x-37*i, BACKGROUND_HEIGHT);
+    for(let i = 0; i < 18; i++){
+      ctx.drawImage(lowerBackgroundImg, this.state.x-36*i, BACKGROUND.UPPER_HEIGHT);
     }
   }
 }

@@ -1,121 +1,78 @@
 import {
-  BIRD_X,
-  PIPE_WIDTH,
-  PIPE_SPEED,
-  BIRD_HEIGHT,
-  CANVAS_X,
-  CANVAS_Y,
-  GROUND_HEIGHT,
-  PREGAME,
-  PLAYING,
-  ENDGAME
+  BACKGROUND,
+  BIRD,
+  CANVAS,
+  PIPE,
+  STATE,
 } from './Constants';
+
+import {PIPE_SRC} from './Images';
+
+const pipeCrashSound = new Audio('assets/sound/crashedPipe.wav');
+const pipeImg = new Image();
+pipeImg.src = PIPE_SRC;
 
 class Pipes{
   constructor(ctx){
     this.ctx = ctx;
-    this._pipes = [];
-    this._frames = 0;
-    this.hasBirdCrashed = this.hasBirdCrashed.bind(this);
-    this.hasBirdPassed = this.hasBirdPassed.bind(this);
-    this.sounds = {
-      'crashedPipe': new Audio('assets/sound/crashedPipe.wav')
-    }
-    this._draw = this._draw.bind(this);
-    this._move = this._move.bind(this);
+    this._pipeCollection = [];
+    this.hasBirdCrashedPipe = this.hasBirdCrashedPipe.bind(this);
+    this.hasBirdPassedFirstPipe = this.hasBirdPassedFirstPipe.bind(this);
   }
 
   updateState(currentState){
-    switch(currentState){
-      case PLAYING:
-        this._pipes.forEach(p => this._move(p));
-        this._frames += 1;
-        const isEmpty = this._pipes.length === 0;
-        const rightMostPipe = this._pipes[this._pipes.length - 1];
-        const shouldAddNewPipe = isEmpty || rightMostPipe.x <= 330;
-        const leftMostPipe = this._pipes[0];
-        if(shouldAddNewPipe){
-          this._addNewPipes();
-        }
-        if(leftMostPipe && leftMostPipe.x === -PIPE_WIDTH){
-          this._removeOldPipes();
-        }
-        break;
-      default:
-        break;
+    if(currentState === STATE.PLAYING){
+      this._pipeCollection.forEach(this._movePipes.bind(this));
+      const isEmpty = this._pipeCollection.length === 0;
+      const rightMostPipe = this._pipeCollection[this._pipeCollection.length - 1];
+      const leftMostPipe = this._pipeCollection[0];
+      const shouldAddNewPipe = isEmpty || rightMostPipe.x <= 330;
+      const shouldRemoveOldPipe = !isEmpty && leftMostPipe.x <= -PIPE.WIDTH;
+      if(shouldAddNewPipe){
+        this._addNewPipes();
+      }
+      if(shouldRemoveOldPipe){
+        this._removeOldPipes();
+      }
     }
   }
 
   updateCanvas(){
-    this._pipes.forEach(p => this._draw(p));
+    this._pipeCollection.forEach(this._drawPipes.bind(this));
   }
 
-  hasBirdCrashed(bird){
-    let hasCrashed = false;
-    let birdX = bird.getX();
-    let birdY = bird.getY();
-    this._pipes.forEach(p => {
-      let {
-        x,
-        y,
-        width,
-        top,
-        space
-      } = p;
-      let closestX  = Math.min(Math.max(birdX, x), x + width);
-      let closestTop = Math.min(birdY, y + top);
-      let closestBtm  = Math.max(birdY, y + top + space);
-
-      let dX  = birdX - closestX;
-      let dTop = birdY - closestTop;
-      let dBtm = birdY - closestBtm;
-      // vector length
-      let d1 = dX*dX + dTop*dTop;
-      let d2 = dX*dX + dBtm*dBtm;
-      let birdRadius = (BIRD_HEIGHT/2)*(BIRD_HEIGHT/2);
-      // determine intersection
-      if (birdRadius > d1 || birdRadius > d2) {
-        hasCrashed = true;
-        this.sounds['crashedPipe'].play();
-      }
-    })
-    return hasCrashed;
+  _movePipes(pipe){
+    pipe.x -= PIPE.SPEED;
   }
 
-  _move(p){
-    p.x -= PIPE_SPEED;
-  }
-
-  _draw(p){
+  _drawPipes(pipe){
     const ctx = this.ctx;
-    const {x, y, top, btm, space, width} = p;
-    let pipe = new Image();
-    pipe.src = 'assets/img/pipe.png';
+    const {x, y, upperPipeHeight, lowerPipeHeight, space, width} = pipe;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(Math.PI);
-    ctx.drawImage(pipe, -width, -top, width, 600);
+    ctx.drawImage(pipeImg, -width, -upperPipeHeight, width, 600);
     ctx.restore();
-    ctx.drawImage(pipe, x, top + space, width, 600);
+    ctx.drawImage(pipeImg, x, upperPipeHeight + space, width, 600);
   }
 
   _addNewPipes(){
-    let space = 170;
-    let btm = this._getRandomInt(GROUND_HEIGHT + 50, 400);
-    let top = CANVAS_Y - btm - space;
-    let pipe = {
-      top: top,
+    const space = PIPE.SPACE_BETWEEN_PIPES;
+    const lowerPipeHeight = this._getRandomInt(BACKGROUND.LOWER_HEIGHT + 50, 350);
+    const upperPipeHeight = CANVAS.HEIGHT - lowerPipeHeight - space;
+    const pipe = {
+      upperPipeHeight: upperPipeHeight,
       x: 600,
       y: 0,
-      btm: btm,
+      lowerPipeHeight: lowerPipeHeight,
       space: space,
-      width: PIPE_WIDTH
+      width: PIPE.WIDTH,
     };
-    this._pipes.push(pipe);
+    this._pipeCollection.push(pipe);
   }
 
   _removeOldPipes(){
-    this._pipes.splice(0, 1);
+    this._pipeCollection.splice(0, 1);
   }
 
   _getRandomInt(min, max){
@@ -124,9 +81,36 @@ class Pipes{
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  hasBirdPassed(){
-    const leftMostPipe = this._pipes[0];
-    return (leftMostPipe  && leftMostPipe.x + leftMostPipe.width === BIRD_X);
+  hasBirdPassedFirstPipe(){
+    const leftMostPipe = this._pipeCollection[0];
+    const birdPassedFirstPipes = leftMostPipe && leftMostPipe.x + leftMostPipe.width + PIPE.SPEED*10 === BIRD.INITIAL_X_POSITION;
+    return birdPassedFirstPipes;
+  }
+
+  hasBirdCrashedPipe(bird){
+    return this._pipeCollection.some(this._hasPipeColideWithBird.bind(this, bird));
+  }
+
+  _hasPipeColideWithBird(bird, pipe){
+    const [birdX, birdY] = bird.getPositions();
+    const {x, y, width, upperPipeHeight, space} = pipe;
+    const closestX  = Math.min(Math.max(birdX, x), x + width);
+    const closestupperPipeHeight = Math.min(birdY, y + upperPipeHeight);
+    const closestlowerPipeHeight  = Math.max(birdY, y + upperPipeHeight + space);
+
+    const dX  = birdX - closestX;
+    const dupperPipeHeight = birdY - closestupperPipeHeight;
+    const dlowerPipeHeight = birdY - closestlowerPipeHeight;
+    // vector length
+    const d1 = dX*dX + dupperPipeHeight*dupperPipeHeight;
+    const d2 = dX*dX + dlowerPipeHeight*dlowerPipeHeight;
+    const birdRadius = (BIRD.HEIGHT/2)*(BIRD.HEIGHT/2);
+    // determine intersection
+    if (birdRadius > d1 || birdRadius > d2) {
+      pipeCrashSound.play();
+      return true;
+    }
+    return false;
   }
 }
 

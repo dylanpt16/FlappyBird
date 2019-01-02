@@ -1,117 +1,134 @@
 import {
-  BIRD_X,
-  BIRD_WIDTH,
-  BIRD_HEIGHT,
-  CANVAS_Y,
-  BACKGROUND_HEIGHT,
-  PREGAME,
-  PLAYING,
-  ENDGAME
+  BACKGROUND,
+  BIRD,
+  CANVAS,
+  STATE,
 } from './Constants';
+import {BIRD_SRC} from './Images';
+
+const ANIMATION_SPEED = BIRD.ANIMATION_SPEED;
+const birdImg = new Image();
+birdImg.src = BIRD_SRC;
+const FLAPPING_BIRD_IMG_INDEXES = [184, 92, 0];
+const birdGravity = BIRD.GRAVITY;
+const birdCrashedGroundSound = new Audio('assets/sound/crashedGround.wav');
+const birdJumpSound = new Audio('assets/sound/keyPressed.wav');
 
 class Bird{
   constructor(ctx){
     this.ctx = ctx;
     this.frames = 0;
     this.state = {
-      x: BIRD_X,
-      y: 250,
-      gravity: 0.5,
-      velocity: -2,
-      rotation: 0,
-      animationSpeed: 10,
-      idx: 0,
-      img: [184, 92, 0],
+      currentState: STATE.PREGAME,
+      images: FLAPPING_BIRD_IMG_INDEXES,
+      imagesIdx: 0,
+      imagesRotation: 0,
+      velocity: BIRD.INITIAL_VELOCITY,
+      x: BIRD.INITIAL_X_POSITION,
+      y: BIRD.INITIAL_Y_POSITION,
     }
-    this.sounds = {
-      'crashedGround': new Audio('assets/sound/crashedGround.wav'),
-      'keyPressed': new Audio('assets/sound/keyPressed.wav')
-    }
-    this._drawBird();
+    this._drawBirdIndexes = [
+      () => this._drawBirdFlapUp(),
+      () => this._drawBirdFlapMid(),
+      () => this._drawBirdFlapDown(),
+      () => this._drawBirdFlapMid()
+    ];
     this.hasBirdTouchedGround = this.hasBirdTouchedGround.bind(this);
+    this._drawSprite = this._drawSprite.bind(this);
   }
 
   updateState(currentState, frames){
     this.frames = frames;
-    const {y} = this.state;
+    this.state.currentState = currentState;
     switch(currentState){
-      case PREGAME:
-        this.state.y = y + Math.cos(this.frames/7);
+      case STATE.PREGAME:
+        this.state.y = this.state.y + Math.cos(frames/7);
         break;
-      case PLAYING:
+      case STATE.PLAYING:
         this._playingState();
         break;
-      case ENDGAME:
+      case STATE.ENDGAME:
         this._endGameState();
+        break;
+      default:
+        break;
+    }
+  }
+
+  updateCanvas(){
+    let idx = 0;
+    idx = Math.floor(this.frames/10) % 4;
+
+    switch(this.state.currentState){
+      case STATE.ENDGAME:
+        this._drawBirdFlapMid();
+        break;
+      case STATE.PLAYING:
+      case STATE.PREGAME:
+        this._drawBirdIndexes[idx]();
+        break;
+      default:
         break;
     }
   }
 
   _playingState(){
-    this.state.velocity += this.state.gravity;
-    if(this.state.y <= BIRD_HEIGHT/2){
-      this.state.velocity = 1;
-    }
-    this.state.y += this.state.velocity;
-    if(this.state.velocity >= 10){
-      this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
+    let {imagesRotation, velocity, y} = this.state;
+    const hasBirdTouchedCeiling = y <= BIRD.HEIGHT/2;
+    velocity = hasBirdTouchedCeiling ? 1: velocity + birdGravity;
+    y += velocity;
+    if(velocity >= BIRD.JUMP_INITIAL_SPEED){
+      imagesRotation = Math.min(Math.PI/2, imagesRotation + 0.3);
     }else{
-      this.state.rotation = -0.3
+      imagesRotation = -0.3;
     }
+    this.state.imagesRotation = imagesRotation;
+    this.state.velocity = velocity;
+    this.state.y = y;
   }
 
   _endGameState(){
-    this.state.img = [92, 92, 92];
-    const lowestBirdPosition = this.state.y + BIRD_WIDTH/2;
-    if(lowestBirdPosition < BACKGROUND_HEIGHT){
-      this.state.rotation = Math.min(Math.PI/2, this.state.rotation + 0.3);
+    const lowestBirdPosition = this.state.y + BIRD.WIDTH/2;
+    if(lowestBirdPosition < BACKGROUND.UPPER_HEIGHT){
+      this.state.imagesRotation = Math.min(Math.PI/2, this.state.imagesRotation + 0.3);
       this.state.y += 10;
     }
   }
 
   hasBirdTouchedGround(){
-    const lowestBirdPosition = this.state.y + BIRD_WIDTH/2;
-    return lowestBirdPosition >= BACKGROUND_HEIGHT;
+    const lowestBirdPosition = this.state.y + BIRD.WIDTH/2;
+    return lowestBirdPosition >= BACKGROUND.UPPER_HEIGHT;
   }
 
-  updateCanvas(){
-    this._drawBird();
+  _drawBirdFlapUp(){
+    this._drawSprite(184);
   }
 
-  _drawBird(){
-    let {
-      img,
-      idx
-    } = this.state;
-    idx = Math.floor(this.frames / 10) % 4;
-    idx = idx === 3 ? 1 : idx;
-    this.state.idx = idx;
-    this._bird(img[idx]);
+  _drawBirdFlapMid(){
+    this._drawSprite(92);
   }
 
-  _bird(px){
+  _drawBirdFlapDown(){
+    this._drawSprite(0);
+  }
+
+  _drawSprite(spriteX){
     const ctx = this.ctx;
-    let {x, y, rotation} = this.state;
-    let bird = new Image();
-    bird.src = 'assets/img/bird.png';
+    let {x, y, imagesRotation} = this.state;
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate(rotation);
-    ctx.drawImage(bird, px, 0, 92, 64, -BIRD_WIDTH/2, -BIRD_HEIGHT/2, BIRD_WIDTH, BIRD_HEIGHT);
+    ctx.rotate(imagesRotation);
+    ctx.drawImage(birdImg, spriteX, 0, 92, 64, -BIRD.WIDTH/2, -BIRD.HEIGHT/2, BIRD.WIDTH, BIRD.HEIGHT);
     ctx.restore();
   }
 
   jump(){
-    this.state.velocity = -10;
-    this.sounds['keyPressed'].play();
+    this.state.velocity = -BIRD.JUMP_INITIAL_SPEED;
+    birdJumpSound.play();
   }
 
-  getX(){
-    return this.state.x;
-  }
-
-  getY(){
-    return this.state.y;
+  getPositions() {
+    return [this.state.x, this.state.y];
   }
 }
 

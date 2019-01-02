@@ -1,9 +1,6 @@
 import {
-  CANVAS_X,
-  CANVAS_Y,
-  PREGAME,
-  PLAYING,
-  ENDGAME
+  CANVAS,
+  STATE,
 } from './Constants';
 import Background from './Background';
 import Bird from './Bird';
@@ -21,7 +18,7 @@ class GameManager{
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
-    this.currentState = PREGAME;
+    this.currentState = STATE.PREGAME;
   }
 
   _run(){
@@ -47,13 +44,13 @@ class GameManager{
     backGround.updateState(this.currentState);
     pipes.updateState(this.currentState);
     bird.updateState(this.currentState, frames);
-    if(this.currentState != ENDGAME
-      && bird.hasBirdTouchedGround()
-      || pipes.hasBirdCrashed(bird)
+    if(this.currentState != STATE.ENDGAME
+      && (bird.hasBirdTouchedGround()
+      || pipes.hasBirdCrashedPipe(bird))
     ){
-      this.currentState = ENDGAME;
+      this.currentState = STATE.ENDGAME;
     }
-    this.state.score += pipes.hasBirdPassed() ? 1 : 0;
+    this.state.score += pipes.hasBirdPassedFirstPipe() ? 1 : 0;
   }
 
   updateCanvas(){
@@ -62,26 +59,24 @@ class GameManager{
       bird,
       pipes
     } = this.state;
-    this.ctx.clearRect(0, 0, CANVAS_X, CANVAS_Y);
-    backGround.drawUpperBg();
+    this.ctx.clearRect(0, 0, CANVAS.HEIGHT, CANVAS.HEIGHT);
+    backGround.drawUpperBackground();
     pipes.updateCanvas();
     bird.updateCanvas();
-    backGround.drawGround();
+    backGround.drawLowerBackground();
     this.drawScore();
   }
 
   onPressed(){
     const {
-      backGround,
       bird,
-      pipes
     } = this.state;
     switch(this.currentState){
-      case PREGAME:
-        this.currentState = PLAYING;
+      case STATE.PREGAME:
+        this.currentState = STATE.PLAYING;
         bird.jump();
         break;
-      case PLAYING:
+      case STATE.PLAYING:
         bird.jump();
         break;
     }
@@ -91,7 +86,7 @@ class GameManager{
     const ctx = this.ctx;
     ctx.font = '46px Arial';
     ctx.fillStyle = 'white';
-    ctx.fillText(this.state.score, CANVAS_X/2 - 23, 50);
+    ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 23, 50);
   }
 }
 
