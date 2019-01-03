@@ -3,18 +3,23 @@
   <head>
     <title>Floppy Bird Javascript Game</title>
     <meta charset='utf-8'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel='stylesheet' href='./assets/css/main.css'>
   </head>
   <body>
+    <div id='cover'></div>
+    <h1>Flappy Bird</h1>
     <div id='flappy'>
-      <h1>Flappy Bird</h1>
       <div id='canvas-container'>
         <canvas id='canvas' width='500' height='600'>
           No game...
         </canvas>
       </div>
-      <div id='button'>
-        <button type="button">Mute Sound!</button>
+      <div id='btn-container'>
+        <div class='btn mute-toggle-container'>
+          <input id='mute-toggle-checkbox' type='checkbox'>
+          <label for='mute-toggle-checkbox'>No Sound</label>
+        </div>
       </div>
     </div>
     <script type='application/javascript' src='./lib/bundle.js'></script>
