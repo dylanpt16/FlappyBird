@@ -1,3 +1,5 @@
+import {GAME_MODE} from './PageManager';
+
 export const BACKGROUND = {
   LOWER_HEIGHT: 85,
   SPEED: 3,
@@ -27,6 +29,7 @@ export const PIPE = {
 };
 
 export const STATE = {
+  DRAWSCORE: 'DRAWSCORE',
   ENDGAME: 'ENDGAME',
   PLAYING: 'PLAYING',
   PREGAME: 'PREGAME',

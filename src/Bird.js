@@ -35,12 +35,12 @@ class Bird{
     this._drawSprite = this._drawSprite.bind(this);
   }
 
-  updateState(currentState, frames){
-    this.frames = frames;
+  updateState(currentState){
+    this.frames += 1;
     this.state.currentState = currentState;
     switch(currentState){
       case STATE.PREGAME:
-        this.state.y = this.state.y + Math.cos(frames/7);
+        this.state.y = this.state.y + Math.cos(this.frames/7);
         break;
       case STATE.PLAYING:
         this._playingState();

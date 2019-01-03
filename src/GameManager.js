@@ -12,21 +12,26 @@ class GameManager{
   constructor(ctx){
     this.ctx = ctx;
     this.state = {
-      backGround: new Background(ctx),
-      bird: new Bird(ctx),
-      pipes: new Pipes(ctx),
-      score: 0
+      backGround: new Background(this.ctx),
+      bird: new Bird(this.ctx),
+      currentGameState: STATE.PREGAME,
+      flashOpacity: 0,
+      lives: 3,
+      pipes: new Pipes(this.ctx),
+      scoreCollection: [],
+      scores: 0,
     };
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
-    this.currentState = STATE.PREGAME;
   }
 
   _run(){
     this.updateState();
     this.updateCanvas();
-    this.requestId = requestAnimationFrame(this._run);
+    if(!this.state.bird.hasBirdTouchedGround()){
+      this.requestId = requestAnimationFrame(this._run);
+    }
   }
 
   newGame(){
@@ -41,20 +46,30 @@ class GameManager{
     const {
       backGround,
       bird,
-      pipes
+      currentGameState,
+      pipes,
     } = this.state;
 
-    backGround.updateState(this.currentState);
-    pipes.updateState(this.currentState);
-    bird.updateState(this.currentState, frames);
+    backGround.updateState(currentGameState);
+    pipes.updateState(currentGameState);
+    bird.updateState(currentGameState, frames);
 
-    if(this.currentState != STATE.ENDGAME && this.hasBirdCrashedPipe(bird, pipes) || bird.hasBirdTouchedGround()){
-      this.currentState = STATE.ENDGAME;
+    if(currentGameState != STATE.ENDGAME && this.hasBirdCrashedPipe(bird, pipes)){
+      this.state.currentGameState = STATE.ENDGAME;
+      this.state.lives -= 1;
+      this.state.flashOpacity = 10;
+      this.state.scoreCollection.push(this.state.scores);
     }
 
+    this.state.flashOpacity -= this.state.flashOpacity > 0 ? 1 : 0;
+
     if(pipes.hasBirdPassedFirstPipe()){
-      this.state.score += 1;
+      this.state.scores += 1;
       earnPointSound.play();
+    }
+
+    if(bird.hasBirdTouchedGround()){
+      this.state.currentGameState = STATE.DRAWSCORE;
     }
   }
 
@@ -62,23 +77,32 @@ class GameManager{
     const {
       backGround,
       bird,
-      pipes
+      currentGameState,
+      flashOpacity,
+      pipes,
     } = this.state;
-    this.ctx.clearRect(0, 0, CANVAS.HEIGHT, CANVAS.HEIGHT);
+
+    const ctx = this.ctx;
+
+    ctx.clearRect(0, 0, CANVAS.HEIGHT, CANVAS.HEIGHT);
     backGround.drawUpperBackground();
     pipes.updateCanvas();
     bird.updateCanvas();
     backGround.drawLowerBackground();
     this.drawScore();
+
+    ctx.globalAlpha = flashOpacity > 0 ? 0.03*(10 - flashOpacity) : 1;
   }
 
   onPressed(){
     const {
       bird,
+      currentGameState,
     } = this.state;
-    switch(this.currentState){
+
+    switch(currentGameState){
       case STATE.PREGAME:
-        this.currentState = STATE.PLAYING;
+        this.state.currentGameState = STATE.PLAYING;
         bird.jump();
         birdJumpSound.play();
         break;
@@ -87,6 +111,23 @@ class GameManager{
         birdJumpSound.play();
         break;
     }
+
+    if(bird.hasBirdTouchedGround() && this.state.lives > 0){
+      this.reInitializeGame();
+      this.newGame();
+    }
+  }
+
+  reInitializeGame(){
+    const newState = {
+      backGround: new Background(this.ctx),
+      bird: new Bird(this.ctx),
+      currentGameState: STATE.PREGAME,
+      pipes: new Pipes(this.ctx),
+      scores: 0,
+    };
+
+    this.state = Object.assign(this.state, newState);
   }
 
   hasBirdCrashedPipe(bird, pipes){
@@ -115,7 +156,21 @@ class GameManager{
     const ctx = this.ctx;
     ctx.font = '46px Arial';
     ctx.fillStyle = 'white';
-    ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 23, 50);
+    ctx.fillText(this.state.scores, CANVAS.WIDTH/2 - 23, 50);
+  }
+
+  drawAllScores(){
+    const ctx = this.ctx;
+    ctx.globalAlpha = 1;
+    ctx.font = '46px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText('Your scores', CANVAS.WIDTH/2 - 120, 150);
+    let i = 1;
+    this.state.scoreCollection.forEach((el)=>{
+      ctx.fillText(el, CANVAS.WIDTH/2 - 23, 160 + 100*i);
+      i += 1;
+    })
+    ctx.globalAlpha = 0.7;
   }
 
   toggleSound(isMuted){
