@@ -49,7 +49,7 @@ class GameManager{
     pipes.updateState(this.currentState);
     bird.updateState(this.currentState, frames);
 
-    if(this.currentState != STATE.ENDGAME && this.hasBirdCrashedPipe(bird, pipes.leftMostPipe())){
+    if(this.currentState != STATE.ENDGAME && this.hasBirdCrashedPipe(bird, pipes) || bird.hasBirdTouchedGround()){
       this.currentState = STATE.ENDGAME;
     }
 
@@ -90,9 +90,9 @@ class GameManager{
     }
   }
 
-  hasBirdCrashedPipe(bird, leftMostPipe){
+  hasBirdCrashedPipe(bird, pipes){
     const [birdX, birdY] = bird.getPositions();
-    const {x, y, width, upperPipeHeight, space} = leftMostPipe;
+    const {x, y, width, upperPipeHeight, space} = pipes.leftMostPipe();
     const closestX  = Math.min(Math.max(birdX, x), x + width);
     const closestUpperPipeHeight = Math.min(birdY, y + upperPipeHeight);
     const closestLowerPipeHeight  = Math.max(birdY, y + upperPipeHeight + space);

@@ -11,13 +11,19 @@ class PageManager{
   }
 
   _initListeners(){
-    key( 'space', () => {
+    key( 'space', (e) => {
       this._game.onPressed();
     });
-    this.$el.find('#canvas').on('click', ()=>{
+    this.$el.find('#canvas').click((e)=>{
+      e.preventDefault();
       this._game.onPressed();
     });
-    this.$el.find('button').on('click', ()=>{
+    this.$el.find('#canvas').dblclick((e)=>{
+      e.preventDefault();
+      this._game.onPressed();
+    });
+    this.$el.find('#button').click((e)=>{
+      e.preventDefault();
       this._game.toggleSound();
     });
   }
