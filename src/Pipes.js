@@ -14,8 +14,9 @@ const pipeImg = new Image();
 pipeImg.src = PIPE_SRC;
 
 class Pipes{
-  constructor(ctx){
+  constructor(ctx, difficulty){
     this.ctx = ctx;
+    this._difficulty = difficulty;
     this._pipeCollection = [];
     this.hasBirdPassedFirstPipe = this.hasBirdPassedFirstPipe.bind(this);
   }
@@ -47,25 +48,35 @@ class Pipes{
 
   _drawPipes(pipe){
     const ctx = this.ctx;
-    const {x, y, upperPipeHeight, lowerPipeHeight, space, width} = pipe;
+    const {x, y, upperPipeHeight, lowerPipeHeight, spaceBtwUpAndDown, width} = pipe;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(Math.PI);
     ctx.drawImage(pipeImg, -width, -upperPipeHeight, width, 600);
     ctx.restore();
-    ctx.drawImage(pipeImg, x, upperPipeHeight + space, width, 600);
+    ctx.drawImage(pipeImg, x, upperPipeHeight + spaceBtwUpAndDown, width, 600);
   }
 
   _addNewPipes(){
-    const space = PIPE.SPACE_BETWEEN_PIPES;
+    let spaceBtwUpAndDown = 0;
+    switch(this._difficulty){
+      case 'Hard':
+        spaceBtwUpAndDown = PIPE.SPACE_BETWEEN_PIPES - PIPE.DIFFICULTY_ADJUSTMENT;
+        break;
+      case 'Easy':
+        spaceBtwUpAndDown = PIPE.SPACE_BETWEEN_PIPES + PIPE.DIFFICULTY_ADJUSTMENT;
+        break;
+      default:
+        spaceBtwUpAndDown = PIPE.SPACE_BETWEEN_PIPES;
+    }
     const lowerPipeHeight = this._getRandomInt(BACKGROUND.LOWER_HEIGHT + 50, 350);
-    const upperPipeHeight = CANVAS.HEIGHT - lowerPipeHeight - space;
+    const upperPipeHeight = CANVAS.HEIGHT - lowerPipeHeight - spaceBtwUpAndDown;
     const pipe = {
       upperPipeHeight: upperPipeHeight,
       x: 600,
       y: 0,
       lowerPipeHeight: lowerPipeHeight,
-      space: space,
+      spaceBtwUpAndDown: spaceBtwUpAndDown,
       width: PIPE.WIDTH,
     };
     this._pipeCollection.push(pipe);

@@ -1,5 +1,3 @@
-import {GAME_MODE} from './PageManager';
-
 export const BACKGROUND = {
   LOWER_HEIGHT: 85,
   SPEED: 3,
@@ -23,6 +21,7 @@ export const CANVAS = {
 };
 
 export const PIPE = {
+  DIFFICULTY_ADJUSTMENT: 50,
   SPACE_BETWEEN_PIPES: 200,
   SPEED: 3,
   WIDTH: 100,

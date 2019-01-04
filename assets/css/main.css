@@ -79,14 +79,12 @@ input[type=checkbox]:checked + label{
   filter: blur(1px);
 }
 
-.btn + input[type=checkbox]:checked{
-}
-
 .clearfix {
   clear: both;
   display: table;
   clear: both;
 }
+
 .clearfix:after {
   content: "";
 }

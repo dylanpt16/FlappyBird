@@ -9,15 +9,16 @@ import Pipes from './Pipes';
 import {birdJumpSound, pipeCrashSound, earnPointSound} from './Sounds';
 
 class GameManager{
-  constructor(ctx){
+  constructor(ctx, difficulty){
     this.ctx = ctx;
+    this._difficulty = difficulty;
     this.state = {
       backGround: new Background(this.ctx),
       bird: new Bird(this.ctx),
       currentGameState: STATE.PREGAME,
       flashOpacity: 0,
       lives: 3,
-      pipes: new Pipes(this.ctx),
+      pipes: new Pipes(this.ctx, this._difficulty),
       scoreCollection: [],
       scores: 0,
     };
@@ -123,7 +124,7 @@ class GameManager{
       backGround: new Background(this.ctx),
       bird: new Bird(this.ctx),
       currentGameState: STATE.PREGAME,
-      pipes: new Pipes(this.ctx),
+      pipes: new Pipes(this.ctx, this._difficulty),
       scores: 0,
     };
 
@@ -132,10 +133,10 @@ class GameManager{
 
   hasBirdCrashedPipe(bird, pipes){
     const [birdX, birdY] = bird.getPositions();
-    const {x, y, width, upperPipeHeight, space} = pipes.leftMostPipe();
+    const {x, y, width, upperPipeHeight, spaceBtwUpAndDown} = pipes.leftMostPipe();
     const closestX  = Math.min(Math.max(birdX, x), x + width);
     const closestUpperPipeHeight = Math.min(birdY, y + upperPipeHeight);
-    const closestLowerPipeHeight  = Math.max(birdY, y + upperPipeHeight + space);
+    const closestLowerPipeHeight  = Math.max(birdY, y + upperPipeHeight + spaceBtwUpAndDown);
 
     const dX  = birdX - closestX;
     const dUpperPipeHeight = birdY - closestUpperPipeHeight;
