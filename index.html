@@ -10,24 +10,36 @@
     <div id='cover'></div>
     <h1>Flappy Bird</h1>
     <div id='flappy'>
-      <div id='canvas-container'>
-        <canvas id='canvas' width='500' height='600'>
-          No game...
-        </canvas>
+      <div class='right-column'>
+        <div id='canvas-container'>
+          <canvas id='canvas' width='500' height='600'>
+            No game...
+          </canvas>
+        </div>
       </div>
-      <div id='btn-container'>
-        <div class='btn mute-toggle-container'>
-          <input id='mute-toggle-checkbox' type='checkbox'>
-          <label for='mute-toggle-checkbox'>No Sound</label>
+      <div class='left-column'>
+        <div id='scoreBoard-container'>
+          <h1>Scoreboard</h1>
+          <div id='scoreBoard'>
+          </div>
         </div>
-        <div class='btn difficulty'>
-          <label>Hard</label>
-        </div>
-        <div class='btn difficulty'>
-          <label>Normal</label>
-        </div>
-        <div class='btn difficulty'>
-          <label>Easy</label>
+        <div id='btn-container'>
+          <div class='btn mute-toggle-container'>
+            <input id='mute-toggle-checkbox' type='checkbox'>
+            <label for='mute-toggle-checkbox'>No Sound</label>
+          </div>
+          <div class='btn difficulty'>
+            <label>Hard</label>
+          </div>
+          <div class='btn difficulty'>
+            <label>Normal</label>
+          </div>
+          <div class='btn difficulty'>
+            <label>Easy</label>
+          </div>
+          <div class='btn restart'>
+            <label>ReStart</label>
+          </div>
         </div>
       </div>
     </div>

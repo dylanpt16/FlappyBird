@@ -8,23 +8,25 @@ import Bird from './Bird';
 import Pipes from './Pipes';
 import {birdJumpSound, pipeCrashSound, earnPointSound} from './Sounds';
 
+let instanceNumber = 0;
+
 class GameManager{
-  constructor(ctx, difficulty){
+  constructor(ctx, difficulty, updateGameScores){
     this.ctx = ctx;
+    this.updateGameScores = updateGameScores;
     this._difficulty = difficulty;
     this.state = {
       backGround: new Background(this.ctx),
       bird: new Bird(this.ctx),
       currentGameState: STATE.PREGAME,
       flashOpacity: 0,
-      lives: 3,
       pipes: new Pipes(this.ctx, this._difficulty),
-      scoreCollection: [],
       scores: 0,
     };
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
     this._run = this._run.bind(this);
+    this.endGame = this.endGame.bind(this);
   }
 
   _run(){
@@ -36,10 +38,14 @@ class GameManager{
   }
 
   newGame(){
+    this.endGame();
+    this.requestId = requestAnimationFrame(this._run);
+  }
+
+  endGame(){
     if(this.requestId){
       cancelAnimationFrame(this.requestId);
     }
-    this.requestId = requestAnimationFrame(this._run);
   }
 
   updateState(){
@@ -55,11 +61,14 @@ class GameManager{
     pipes.updateState(currentGameState);
     bird.updateState(currentGameState, frames);
 
-    if(currentGameState != STATE.ENDGAME && this.hasBirdCrashedPipe(bird, pipes)){
+    if(this.state.currentGameState != STATE.BIRDCRASHED && this.hasBirdCrashedPipe(bird, pipes)){
+      this.state.currentGameState = STATE.BIRDCRASHED;
+      this.state.flashOpacity = 7;
+    }
+
+    if(bird.hasBirdTouchedGround()){
       this.state.currentGameState = STATE.ENDGAME;
-      this.state.lives -= 1;
-      this.state.flashOpacity = 10;
-      this.state.scoreCollection.push(this.state.scores);
+      this.updateGameScores(this.state.scores);
     }
 
     this.state.flashOpacity -= this.state.flashOpacity > 0 ? 1 : 0;
@@ -67,10 +76,6 @@ class GameManager{
     if(pipes.hasBirdPassedFirstPipe()){
       this.state.scores += 1;
       earnPointSound.play();
-    }
-
-    if(bird.hasBirdTouchedGround()){
-      this.state.currentGameState = STATE.DRAWSCORE;
     }
   }
 
@@ -98,10 +103,9 @@ class GameManager{
   onPressed(){
     const {
       bird,
-      currentGameState,
     } = this.state;
 
-    switch(currentGameState){
+    switch(this.state.currentGameState){
       case STATE.PREGAME:
         this.state.currentGameState = STATE.PLAYING;
         bird.jump();
@@ -113,9 +117,8 @@ class GameManager{
         break;
     }
 
-    if(bird.hasBirdTouchedGround() && this.state.lives > 0){
+    if(bird.hasBirdTouchedGround()){
       this.reInitializeGame();
-      this.newGame();
     }
   }
 
@@ -129,6 +132,7 @@ class GameManager{
     };
 
     this.state = Object.assign(this.state, newState);
+    this.newGame();
   }
 
   hasBirdCrashedPipe(bird, pipes){
@@ -158,6 +162,17 @@ class GameManager{
     ctx.font = '46px Arial';
     ctx.fillStyle = 'white';
     ctx.fillText(this.state.scores, CANVAS.WIDTH/2 - 23, 50);
+  }
+
+  drawLives(){
+    const ctx = this.ctx;
+    ctx.font = '46px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText(this.state.lives, 50, 50);
+  }
+
+  updateScores(){
+    return this.state.scorecollection || [];
   }
 
   drawAllScores(){

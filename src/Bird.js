@@ -45,10 +45,8 @@ class Bird{
       case STATE.PLAYING:
         this._playingState();
         break;
-      case STATE.ENDGAME:
-        this._endGameState();
-        break;
       default:
+        this._endGameState();
         break;
     }
   }
@@ -58,14 +56,12 @@ class Bird{
     idx = Math.floor(this.frames/10) % 4;
 
     switch(this.state.currentState){
-      case STATE.ENDGAME:
-        this._drawBirdFlapMid();
-        break;
       case STATE.PLAYING:
       case STATE.PREGAME:
         this._drawBirdIndexes[idx]();
         break;
       default:
+        this._drawBirdFlapMid();
         break;
     }
   }

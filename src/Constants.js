@@ -28,7 +28,7 @@ export const PIPE = {
 };
 
 export const STATE = {
-  DRAWSCORE: 'DRAWSCORE',
+  BIRDCRASHED: 'BIRDCRASHED',
   ENDGAME: 'ENDGAME',
   PLAYING: 'PLAYING',
   PREGAME: 'PREGAME',
