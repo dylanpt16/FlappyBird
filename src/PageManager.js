@@ -1,5 +1,7 @@
 import GameManager from './GameManager';
 
+const SCORES = 'SCORES'
+
 class PageManager{
 	constructor($el){
 		this.$el = $el;
@@ -8,7 +10,7 @@ class PageManager{
 		this._initFindElements($el);
 		this._initGame($el);
 		this._initListeners();
-		this._displayLatestScores();
+		this._updateScoreBoard();
 	}
 
 	_initFindElements($el){
@@ -30,7 +32,20 @@ class PageManager{
 		}
 
 		this._game = new GameManager(this.ctx, this._difficulty, this.updateGameScores);
+		this._initScores();
 		this._game.newGame();
+	}
+
+	_initScores(){
+		let scores;
+
+		try{
+			scores = JSON.parse(window.localStorage.getItem(SCORES));
+		} catch(err){
+			console.log(err);
+		}
+
+		this._scores = Array.isArray(scores) ? scores : [];
 	}
 
 	_initListeners(){
@@ -76,6 +91,10 @@ class PageManager{
 			time: new Date(),
 		};
 		this._scores.push(newRecord);
+		this._scores = this._scores.sort((i,j)=> j.score - i.score);
+
+		window.localStorage.setItem(SCORES, JSON.stringify(this._scores));
+
 		this._updateScoreBoard();
 	}
 
@@ -87,7 +106,7 @@ class PageManager{
 				<li>
 					${record.score}
 					<span>
-					  ${record.time}
+						${record.time}
 					</span>
 				</li>
 			`);
@@ -95,16 +114,6 @@ class PageManager{
 		})
 
 		this.$scoreBoard.html($ol);
-	}
-
-	_displayLatestScores(){
-		const latestScores = JSON.parse(window.localStorage.getItem('latestScores'));
-		const $scoreBoard = this.$scoreBoard;
-		if(latestScores){
-			latestScores.forEach((score)=>{
-				$scoreBoard.append('<h2>'+score+'</h2>')
-			});
-		}
 	}
 }
 
