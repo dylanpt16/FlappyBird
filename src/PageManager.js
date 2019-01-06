@@ -8,8 +8,8 @@ class PageManager{
 		this.updateGameScores = this.updateGameScores.bind(this);
 		this._updateScoreBoard = this._updateScoreBoard.bind(this);
 		this._initFindElements($el);
-		this._initGame($el);
 		this._initListeners();
+		this._initGame();
 		this._updateScoreBoard();
 	}
 
@@ -23,17 +23,26 @@ class PageManager{
 		this.ctx = this.canvas.getContext('2d');
 	}
 
-	_initGame($el){
-		this._difficulty = 'Normal';
+	_initGame(){
 		this._scores = [];
 
 		if(this._game){
 			this._game.endGame();
 		}
 
-		this._game = new GameManager(this.ctx, this._difficulty, this.updateGameScores);
+		this._game = new GameManager(this.ctx, this._difficulty || 'Normal', this.updateGameScores);
 		this._initScores();
 		this._game.newGame();
+	}
+
+	_reInitGame(){
+		if(this._game){
+			this._game.endGame();
+			setTimeout(()=>{
+				delete this._game;
+				this._initGame();
+			}, 2000);
+		}
 	}
 
 	_initScores(){
@@ -76,12 +85,12 @@ class PageManager{
 			const newDifficulty = e.target.innerText;
 			if(newDifficulty != this._difficulty){
 				this._difficulty = newDifficulty;
-				this._initGame();
+				this._reInitGame();
 			}
 		})
 
 		this.$restartBtn.click((e)=>{
-			this._initGame();
+			this._reInitGame();
 		});
 	}
 
@@ -91,11 +100,12 @@ class PageManager{
 			time: new Date(),
 		};
 		this._scores.push(newRecord);
-		this._scores = this._scores.sort((i,j)=> j.score - i.score);
+		this._scores = this._scores.sort((i,j)=> j.score - i.score).slice(0,3);;
 
 		window.localStorage.setItem(SCORES, JSON.stringify(this._scores));
 
 		this._updateScoreBoard();
+		this._reInitGame();
 	}
 
 	_updateScoreBoard(){

@@ -116,23 +116,6 @@ class GameManager{
         birdJumpSound.play();
         break;
     }
-
-    if(bird.hasBirdTouchedGround()){
-      this.reInitializeGame();
-    }
-  }
-
-  reInitializeGame(){
-    const newState = {
-      backGround: new Background(this.ctx),
-      bird: new Bird(this.ctx),
-      currentGameState: STATE.PREGAME,
-      pipes: new Pipes(this.ctx, this._difficulty),
-      scores: 0,
-    };
-
-    this.state = Object.assign(this.state, newState);
-    this.newGame();
   }
 
   hasBirdCrashedPipe(bird, pipes){
