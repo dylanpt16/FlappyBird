@@ -63,7 +63,7 @@ class GameManager{
 
     if(this.state.currentGameState != STATE.BIRDCRASHED && this.hasBirdCrashedPipe(bird, pipes)){
       this.state.currentGameState = STATE.BIRDCRASHED;
-      this.state.flashOpacity = 7;
+			this.state.flashOpacity = 30;
     }
 
     if(bird.hasBirdTouchedGround()){
@@ -71,7 +71,7 @@ class GameManager{
       this.updateGameScores(this.state.scores);
     }
 
-    this.state.flashOpacity -= this.state.flashOpacity > 0 ? 1 : 0;
+    this.state.flashOpacity -= (this.state.flashOpacity > 0 ? 1 : 0);
 
     if(pipes.hasBirdPassedFirstPipe()){
       this.state.scores += 1;
@@ -90,14 +90,16 @@ class GameManager{
 
     const ctx = this.ctx;
 
-    ctx.clearRect(0, 0, CANVAS.HEIGHT, CANVAS.HEIGHT);
+		ctx.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
     backGround.drawUpperBackground();
     pipes.updateCanvas();
     bird.updateCanvas();
     backGround.drawLowerBackground();
+		if(flashOpacity > 0){
+			ctx.fillStyle = `rgba(255, 255, 255, ${flashOpacity/30})`;
+			ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
+		}
     this.drawScore();
-
-    ctx.globalAlpha = flashOpacity > 0 ? 0.03*(10 - flashOpacity) : 1;
   }
 
   onPressed(){
