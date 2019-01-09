@@ -32,14 +32,13 @@ class GameManager{
   _run(){
     this.updateState();
     this.updateCanvas();
-    if(!this.state.bird.hasBirdTouchedGround()){
+    if(this.state.currentGameState != STATE.ENDGAME){
       this.requestId = requestAnimationFrame(this._run);
     }
   }
 
   newGame(){
-    this.endGame();
-    this.requestId = requestAnimationFrame(this._run);
+    this._run();
   }
 
   endGame(){
@@ -66,7 +65,7 @@ class GameManager{
 			this.state.flashOpacity = 30;
     }
 
-    if(bird.hasBirdTouchedGround()){
+    if(bird.hasBirdTouchedGround() && !this.state.flashOpacity){
       this.state.currentGameState = STATE.ENDGAME;
       this.updateGameScores(this.state.scores);
     }
@@ -99,7 +98,6 @@ class GameManager{
 			ctx.fillStyle = `rgba(255, 255, 255, ${flashOpacity/30})`;
 			ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 		}
-    this.drawScore();
   }
 
   onPressed(){
@@ -140,38 +138,6 @@ class GameManager{
       return true;
     }
     return false;
-  }
-
-  drawScore(){
-    const ctx = this.ctx;
-    ctx.font = '46px Arial';
-    ctx.fillStyle = 'white';
-    ctx.fillText(this.state.scores, CANVAS.WIDTH/2 - 23, 50);
-  }
-
-  drawLives(){
-    const ctx = this.ctx;
-    ctx.font = '46px Arial';
-    ctx.fillStyle = 'white';
-    ctx.fillText(this.state.lives, 50, 50);
-  }
-
-  updateScores(){
-    return this.state.scorecollection || [];
-  }
-
-  drawAllScores(){
-    const ctx = this.ctx;
-    ctx.globalAlpha = 1;
-    ctx.font = '46px Arial';
-    ctx.fillStyle = 'white';
-    ctx.fillText('Your scores', CANVAS.WIDTH/2 - 120, 150);
-    let i = 1;
-    this.state.scoreCollection.forEach((el)=>{
-      ctx.fillText(el, CANVAS.WIDTH/2 - 23, 160 + 100*i);
-      i += 1;
-    })
-    ctx.globalAlpha = 0.7;
   }
 
   toggleSound(isMuted){

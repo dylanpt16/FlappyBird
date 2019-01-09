@@ -24,24 +24,22 @@ class PageManager{
 	}
 
 	_initGame(){
-		this._scores = [];
-
-		if(this._game){
-			this._game.endGame();
-		}
-
-		this._game = new GameManager(this.ctx, this._difficulty || 'Normal', this.updateGameScores);
 		this._initScores();
+		this._game = new GameManager(this.ctx, this._difficulty || 'Normal', this.updateGameScores);
 		this._game.newGame();
 	}
 
-	_reInitGame(){
-		if(this._game){
-			this._game.endGame();
-			setTimeout(()=>{
+	_reInitGame(waitTime){
+		this._game.endGame();
+		if(waitTime){
+			this._timeOut = setTimeout(()=> {
 				delete this._game;
 				this._initGame();
-			}, 2000);
+			}, waitTime);
+		}else {
+			clearTimeout(this._timeOut);
+			delete this._game;
+			this._initGame();
 		}
 	}
 
@@ -73,6 +71,7 @@ class PageManager{
 		});
 
 		this.$muteSoundBtn.click((e)=>{
+			e.preventDefault();
 			const isMuted = true;
 			if(this.$muteSoundBtn.prop('checked')){
 				this._game.toggleSound(isMuted);
@@ -82,14 +81,14 @@ class PageManager{
 		});
 
 		this.$difficultyBtn.click((e)=>{
+			e.preventDefault();
 			const newDifficulty = e.target.innerText;
-			if(newDifficulty != this._difficulty){
-				this._difficulty = newDifficulty;
-				this._reInitGame();
-			}
+			this._difficulty = newDifficulty;
+			this._reInitGame();
 		})
 
 		this.$restartBtn.click((e)=>{
+			e.preventDefault();
 			this._reInitGame();
 		});
 	}
@@ -105,7 +104,7 @@ class PageManager{
 		window.localStorage.setItem(SCORES, JSON.stringify(this._scores));
 
 		this._updateScoreBoard();
-		this._reInitGame();
+		this._reInitGame(1000);
 	}
 
 	_updateScoreBoard(){
