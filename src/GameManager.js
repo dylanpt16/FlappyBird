@@ -21,7 +21,7 @@ class GameManager{
       currentGameState: STATE.PREGAME,
       flashOpacity: 0,
       pipes: new Pipes(this.ctx, this._difficulty),
-      scores: 0,
+      score: 0,
     };
     this.updateState = this.updateState.bind(this);
     this.updateCanvas = this.updateCanvas.bind(this);
@@ -67,13 +67,13 @@ class GameManager{
 
     if(bird.hasBirdTouchedGround() && !this.state.flashOpacity){
       this.state.currentGameState = STATE.ENDGAME;
-      this.updateGameScores(this.state.scores);
+      this.updateGameScores(this.state.score);
     }
 
     this.state.flashOpacity -= (this.state.flashOpacity > 0 ? 1 : 0);
 
     if(pipes.hasBirdPassedFirstPipe()){
-      this.state.scores += 1;
+      this.state.score += 1;
       earnPointSound.play();
     }
   }
@@ -94,11 +94,31 @@ class GameManager{
     pipes.updateCanvas();
     bird.updateCanvas();
     backGround.drawLowerBackground();
+
 		if(flashOpacity > 0){
 			ctx.fillStyle = `rgba(255, 255, 255, ${flashOpacity/30})`;
 			ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 		}
+
+		if(currentGameState === STATE.ENDGAME){
+			this._displayFinalScore();
+		}else {
+			this._drawScore();
+		}
   }
+
+	_drawScore(){
+    const ctx = this.ctx;
+    ctx.font = '46px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 23, 50);
+	}
+
+	_displayFinalScore(){
+    const ctx = this.ctx;
+		ctx.font = "100px Arial";
+		ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 50, CANVAS.HEIGHT/2);
+	}
 
   onPressed(){
     const {
