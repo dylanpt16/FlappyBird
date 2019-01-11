@@ -62,7 +62,7 @@ class GameManager{
 
     if(this.state.currentGameState != STATE.BIRDCRASHED && this.hasBirdCrashedPipe(bird, pipes)){
       this.state.currentGameState = STATE.BIRDCRASHED;
-			this.state.flashOpacity = 30;
+      this.state.flashOpacity = 30;
     }
 
     if(bird.hasBirdTouchedGround() && !this.state.flashOpacity){
@@ -89,36 +89,36 @@ class GameManager{
 
     const ctx = this.ctx;
 
-		ctx.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
+    ctx.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
     backGround.drawUpperBackground();
     pipes.updateCanvas();
     bird.updateCanvas();
     backGround.drawLowerBackground();
 
-		if(flashOpacity > 0){
-			ctx.fillStyle = `rgba(255, 255, 255, ${flashOpacity/30})`;
-			ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
-		}
+    if(flashOpacity > 0){
+      ctx.fillStyle = `rgba(255, 255, 255, ${flashOpacity/30})`;
+      ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
+    }
 
-		if(currentGameState === STATE.ENDGAME){
-			this._displayFinalScore();
-		}else {
-			this._drawScore();
-		}
+    if(currentGameState === STATE.ENDGAME){
+      this._displayFinalScore();
+    }else {
+      this._drawScore();
+    }
   }
 
-	_drawScore(){
+  _drawScore(){
     const ctx = this.ctx;
     ctx.font = '46px Arial';
     ctx.fillStyle = 'white';
     ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 23, 50);
-	}
+  }
 
-	_displayFinalScore(){
+  _displayFinalScore(){
     const ctx = this.ctx;
-		ctx.font = "100px Arial";
-		ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 50, CANVAS.HEIGHT/2);
-	}
+    ctx.font = "100px Arial";
+    ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 50, CANVAS.HEIGHT/2);
+  }
 
   onPressed(){
     const {
