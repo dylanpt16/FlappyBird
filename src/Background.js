@@ -27,8 +27,8 @@ class Background{
   }
 
   updateState(currentState){
+    this.currentState = currentState;
     if(currentState === STATE.PLAYING || currentState === STATE.PREGAME){
-      this.currentState = currentState;
       this.state.x -= BACKGROUND.SPEED;
       if(this.state.x <= 564){
         this.state.x = 600;

@@ -7,8 +7,10 @@ import Background from './Background';
 import Bird from './Bird';
 import Pipes from './Pipes';
 import {birdJumpSound, pipeCrashSound, earnPointSound} from './Sounds';
+import {GAMEOVER_SRC} from './Images';
 
-let instanceNumber = 0;
+const gameOverImg = new Image();
+gameOverImg.src = GAMEOVER_SRC;
 
 class GameManager{
   constructor(ctx, difficulty, updateGameScores){
@@ -52,13 +54,8 @@ class GameManager{
     const {
       backGround,
       bird,
-      currentGameState,
       pipes,
     } = this.state;
-
-    backGround.updateState(currentGameState);
-    pipes.updateState(currentGameState);
-    bird.updateState(currentGameState, frames);
 
     if(this.state.currentGameState != STATE.BIRDCRASHED && this.hasBirdCrashedPipe(bird, pipes)){
       this.state.currentGameState = STATE.BIRDCRASHED;
@@ -76,6 +73,10 @@ class GameManager{
       this.state.score += 1;
       earnPointSound.play();
     }
+
+    backGround.updateState(this.state.currentGameState);
+    pipes.updateState(this.state.currentGameState);
+    bird.updateState(this.state.currentGameState, frames);
   }
 
   updateCanvas(){
@@ -101,7 +102,7 @@ class GameManager{
     }
 
     if(currentGameState === STATE.ENDGAME){
-      this._displayFinalScore();
+      this._drawGameOver();
     }else {
       this._drawScore();
     }
@@ -114,10 +115,11 @@ class GameManager{
     ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 23, 50);
   }
 
-  _displayFinalScore(){
+  _drawGameOver(){
     const ctx = this.ctx;
+    ctx.drawImage(gameOverImg, CANVAS.WIDTH/2 - 200, CANVAS.HEIGHT/10, 400, 200);
     ctx.font = "100px Arial";
-    ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 50, CANVAS.HEIGHT/2);
+    ctx.fillText(this.state.score, CANVAS.WIDTH/2 - 40, CANVAS.HEIGHT/2 + 50);
   }
 
   onPressed(){
