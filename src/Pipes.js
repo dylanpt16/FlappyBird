@@ -2,6 +2,7 @@ import {
   BACKGROUND,
   BIRD,
   CANVAS,
+  DIFFICULTY,
   PIPE,
   STATE,
 } from './Constants';
@@ -60,10 +61,10 @@ class Pipes{
   _addNewPipes(){
     let spaceBtwUpAndDown = 0;
     switch(this._difficulty){
-      case 'Hard':
+      case DIFFICULTY.HARD:
         spaceBtwUpAndDown = PIPE.SPACE_BETWEEN_PIPES - PIPE.DIFFICULTY_ADJUSTMENT;
         break;
-      case 'Easy':
+      case DIFFICULTY.EASY:
         spaceBtwUpAndDown = PIPE.SPACE_BETWEEN_PIPES + PIPE.DIFFICULTY_ADJUSTMENT;
         break;
       default:

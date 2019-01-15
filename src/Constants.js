@@ -20,6 +20,12 @@ export const CANVAS = {
   WIDTH: 500,
 };
 
+export const DIFFICULTY = {
+  EASY: 'Easy',
+  HARD: 'Hard',
+  NORMAL: 'Normal',
+};
+
 export const PIPE = {
   DIFFICULTY_ADJUSTMENT: 50,
   SPACE_BETWEEN_PIPES: 200,

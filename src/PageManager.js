@@ -1,4 +1,5 @@
 import GameManager from './GameManager';
+import {DIFFICULTY} from './Constants';
 
 const SCORES = 'SCORES'
 
@@ -25,7 +26,7 @@ class PageManager{
 
   _initGame(){
     this._initScores();
-    this._game = new GameManager(this.ctx, this._difficulty || 'Normal', this.updateGameScores);
+    this._game = new GameManager(this.ctx, this._difficulty || DIFFICULTY.NORMAL, this.updateGameScores);
     this._game.newGame();
   }
 
@@ -95,6 +96,7 @@ class PageManager{
 
   updateGameScores(newScore){
     const newRecord = {
+      difficulty: (this._difficulty || DIFFICULTY.NORMAL),
       score: newScore,
       time: new Date(),
     };
@@ -116,6 +118,9 @@ class PageManager{
           ${record.score}
           <span>
             ${record.time}
+          </span>
+          <span>
+            ${record.difficulty}
           </span>
         </li>
       `);
