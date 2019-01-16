@@ -102,3 +102,22 @@ input[type=checkbox]:checked + label{
 .left-column {
   height: 600px;
 }
+
+#scoreBoard > ol {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  list-style: none;
+  padding: 0;
+}
+
+.scores {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.scores > span {
+  width: 100px;
+}

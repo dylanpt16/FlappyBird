@@ -98,7 +98,7 @@ class PageManager{
     const newRecord = {
       difficulty: (this._difficulty || DIFFICULTY.NORMAL),
       score: newScore,
-      time: new Date(),
+      time: new moment(mm-dd-yyyy),
     };
     this._scores.push(newRecord);
     this._scores = this._scores.sort((i,j)=> j.score - i.score).slice(0,3);;
@@ -114,10 +114,12 @@ class PageManager{
 
     this._scores.forEach((record)=> {
       const $li = $(`
-        <li>
-          ${record.score}
+        <li class='scores'>
           <span>
-            ${record.time}
+          ${record.score}
+          </span>
+          <span>
+            ${moment(record.time).format('MM-DD-YYYY')}
           </span>
           <span>
             ${record.difficulty}
