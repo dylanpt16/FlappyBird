@@ -1,98 +1,104 @@
 body {
-	text-align: center;
-	font-family: 'Roboto', sans-serif;
-	-webkit-user-select: none; /* Safari */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+/Edge */
-	user-select: none; /* Standard */
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 #cover {
-	background-image: url(../img/background.png);
-	background-repeat: repeat-x;
-	background-size: auto 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	opacity: 0.5;
-	filter: blur(3px);
+  background-image: url(../img/background.png);
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.5;
+  filter: blur(3px);
 }
 
 #flappy {
-	display: flex;
-	position: relative;
+  display: flex;
+  position: relative;
 }
 
 #flappy > div {
-	margin: auto;
+  margin: auto;
 }
 
 #canvas-container {
-	display: flex;
-	justify-content: center;
-}
-
-*canvas {
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }
 
 #btn-container {
-	margin-top: 30px;
+  margin-top: 30px;
+  display: flex;
+  height: 300px;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .btn {
-	position: relative;
-	cursor: pointer;
-	display: inline-block;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .btn:hover {
-	top: 2px;
+  top: 2px;
 }
 
 .btn:active {
-	top: 4px;
+  top: 4px;
 }
 
 .btn > * {
-	margin: auto;
-	cursor: pointer;
+  margin: auto;
+  cursor: pointer;
+}
+
+.difficulty-container {
+  display: flex;
+  justify-content: inherit;
 }
 
 .mute-toggle-container {
 }
 
 #mute-toggle-checkbox {
-	display: none;
+  display: none;
 }
 
 label {
-	background: white;
-	border-radius: 20px;
-	box-shadow: 0 4px 0 #000;
-	padding: 15px;
-	display: inline-block;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 0 #000;
+  padding: 15px;
+  display: inline-block;
 }
 
 input[type=checkbox]:checked + label{
-	background: #D0D0D0;
-	box-shadow: 0 0 1px #000;
-	opacity: 0.6;
-	filter: blur(1px);
+  background: #D0D0D0;
+  box-shadow: 0 0 1px #000;
+  opacity: 0.6;
+  filter: blur(1px);
 }
 
 .clearfix {
-	clear: both;
-	display: table;
-	clear: both;
+  clear: both;
+  display: table;
+  clear: both;
 }
 
 .clearfix:after {
-	content: "";
+  content: "";
 }
 
 .left-column {
-	height: 600px;
+  height: 600px;
 }
