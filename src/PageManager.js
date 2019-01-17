@@ -98,7 +98,7 @@ class PageManager{
     const newRecord = {
       difficulty: (this._difficulty || DIFFICULTY.NORMAL),
       score: newScore,
-      time: new moment(mm-dd-yyyy),
+      time: new moment(),
     };
     this._scores.push(newRecord);
     this._scores = this._scores.sort((i,j)=> j.score - i.score).slice(0,3);;
