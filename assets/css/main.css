@@ -20,6 +20,32 @@ body {
   filter: blur(3px);
 }
 
+.nav.navbar-nav{
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+
+.navbar-nav > h1 {
+  margin: auto;
+}
+
+img.profile-icon {
+  height: 40px;
+  width: 40px;
+}
+
+#icon-gh, #icon-lnkd {
+  margin: auto;
+}
+
+.navbar-nav > li {
+  padding-left: 10px;
+  padding-right: 10px;
+  list-style: none;
+  display: flex;
+}
+
 #flappy {
   display: flex;
   position: relative;
