@@ -46,13 +46,7 @@ class PageManager{
 
   _initScores(){
     let scores;
-
-    try{
-      scores = JSON.parse(window.localStorage.getItem(SCORES));
-    } catch(err){
-      console.log(err);
-    }
-
+    scores = JSON.parse(window.localStorage.getItem(SCORES));
     this._scores = Array.isArray(scores) ? scores : [];
   }
 
