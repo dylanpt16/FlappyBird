@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require("webpack");
 
 module.exports = {
   context: __dirname,
@@ -24,5 +25,8 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     extensions: [".js", "*"]
-  }
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+  ],
 };

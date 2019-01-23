@@ -1,5 +1,6 @@
 import GameManager from './GameManager';
 import {DIFFICULTY} from './Constants';
+import moment from 'moment';
 
 const SCORES = 'SCORES'
 
@@ -113,7 +114,7 @@ class PageManager{
           ${record.score}
           </span>
           <span>
-            ${moment(record.time).format('MM-DD-YYYY')}
+            ${moment(record.time).format('MMM-DD-YYYY')}
           </span>
           <span>
             ${record.difficulty}
