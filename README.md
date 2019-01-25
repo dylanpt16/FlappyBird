@@ -8,7 +8,7 @@ An implementation of the Flappybird game, built on Javascript, HTML5 canvas, jQu
 ![demo](readme_img/demo.gif)
 
 # Features
-* Using vector length to determine distance between the bird and pipes.
+## Using vector length to determine distance between the bird and pipes.
 
 ```javascript
   hasBirdCrashedPipe(bird, pipes){
@@ -34,7 +34,7 @@ An implementation of the Flappybird game, built on Javascript, HTML5 canvas, jQu
   }
 ```
 
-* Using localStorage to keep top 3 scores to motivate users to break the records.
+## Using localStorage to keep top 3 scores to motivate users to break the records.
 
 ```javascript
     const newRecord = {
@@ -49,6 +49,16 @@ An implementation of the Flappybird game, built on Javascript, HTML5 canvas, jQu
 ```
 
 
-* There are 3 difficulty modes to challenge skillful users.
+## There are 3 difficulty modes to challenge skillful players.
+
+* Easy
+
+![difficulty](readme_img/easy.gif)
+
+* Normal
+
+![difficulty](readme_img/normal.gif)
+
+* Hard
 
 ![difficulty](readme_img/hard.gif)
