@@ -104,9 +104,7 @@ class PageManager{
     this._reInitGame(1000);
   }
 
-  _updateScoreBoard(){
-    const $ol = $('<ol>');
-
+  _displayTopScores($ol){
     this._scores.forEach((record)=> {
       const $li = $(`
         <li class='scores'>
@@ -123,7 +121,23 @@ class PageManager{
       `);
       $ol.append($li);
     })
+  }
 
+  _displayScoreInto($ol){
+    const $h3 = $(`
+      <h3>Welcome! Play the game to see your scores!</h3>
+      `);
+    $ol.append($h3);
+  }
+
+  _updateScoreBoard(){
+    const $ol = $('<ol>');
+
+    if(this._scores.length) {
+      this._displayTopScores($ol);
+    }else {
+      this._displayScoreInto($ol);
+    }
     this.$scoreBoard.html($ol);
   }
 }
