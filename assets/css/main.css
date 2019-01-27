@@ -20,6 +20,16 @@ body {
   position: relative;
 }
 
+.copyright {
+  padding-right: 40px;
+  margin: 0px;
+}
+
+.copyright > li {
+  display: inline-block;
+  margin: 0px;
+}
+
 #cover {
   background-image: url(../img/background.png);
   background-repeat: repeat-x;
@@ -38,6 +48,15 @@ body {
   position: relative;
   justify-content: center;
   margin: 0px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.nav.navbar-nav.footer{
+  height: 50px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 5px;
 }
 
 .navbar-nav > h1 {
