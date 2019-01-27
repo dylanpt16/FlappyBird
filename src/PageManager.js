@@ -105,6 +105,20 @@ class PageManager{
   }
 
   _displayTopScores($ol){
+    const $h3 = $(`
+        <li class='scores header'>
+          <b>
+          Scores
+          </b>
+          <b>
+          Time
+          </b>
+          <b>
+          Difficulty
+          </b>
+        </li>
+      `);
+    $ol.append($h3);
     this._scores.forEach((record)=> {
       const $li = $(`
         <li class='scores'>

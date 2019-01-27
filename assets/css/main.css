@@ -178,6 +178,10 @@ input[type=checkbox]:checked + label{
   padding-bottom: 10px;
 }
 
-.scores > span {
+.scores > span, .scores > b {
   width: 100px;
+}
+
+.scores.header {
+  font-size: 20px;
 }
