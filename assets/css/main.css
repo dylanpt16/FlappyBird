@@ -5,6 +5,19 @@ body {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
+  margin: 0px;
+  overflow: hidden;
+}
+
+#header {
+  background-color: white;
+  position: relative;
+}
+
+#footer {
+  background-color: white;
+  height: 100px;
+  position: relative;
 }
 
 #cover {
@@ -24,6 +37,7 @@ body {
   display: flex;
   position: relative;
   justify-content: center;
+  margin: 0px;
 }
 
 .navbar-nav > h1 {
@@ -49,6 +63,7 @@ img.profile-icon {
 #flappy {
   display: flex;
   position: relative;
+  min-height: calc(100vh - 160px);
 }
 
 #flappy > div {
